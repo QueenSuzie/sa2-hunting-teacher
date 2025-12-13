@@ -1,0 +1,65 @@
+# Visual Studio 2022 C# .gitignore
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.vsp
+*.vspscc
+
+# Visual Studio 2022 temporary files
+.vs/
+
+# ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+
+# NuGet packages
+*.nupkg
+# The packages folder can be ignored because of NuGet restore
+**/packages/*
+# NuGet v3
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# DotCover
+*.dotCover
+
+# Others
+*.ncb
+*.sdf
+*.cachefile
+*.dbmdl
+*.bak
+*.Backup
+*.log
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Build artifacts
+*.dll
+*.exe
+*.pdb
+*.appx
+*.appxbundle
+*.msi
+*.msix
+*.msixbundle
+*.zip
+
+# Rider, VS Code, other editors
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Coverage & test results
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
