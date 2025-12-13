@@ -8,12 +8,11 @@
 	};
 
 	internal abstract class HuntingLevel(SA2Manager manager, byte repetitions) {
-		protected abstract int[] Sequence { get; }
+		protected abstract Set[] Sequence { get; }
+		public abstract LevelId LevelId { get; }
 
 		private int Next = 0;
 		private int SequenceCount = 0;
-		private bool LevelLoading = false;
-		private bool InLevel = false;
 
 		protected SA2Manager Manager { get; } = manager;
 
@@ -24,28 +23,16 @@
 		}
 
 		public void RunSequence() {
-			if (!this.InLevel && !this.LevelLoading) {
-				this.LevelLoading = this.Manager.IsLevelLoading();
-				return;
-			}
+			this.Manager.ApplySet(this.Sequence[Next], this.Next + 1, this.Sequence.Length, (int) Math.Ceiling((double)(this.SequenceCount + 1) / (double)this.Sequence.Length));
 
-			if (this.LevelLoading) {
-				this.LevelLoading = false;
-				this.Manager.SetSeed(this.Sequence[Next]);
-				this.InLevel = true;
-				return;
-			}
-
-			// if we make it here then we must be in level
 			if (this.Manager.IsInWinScreen()) {
 				this.Next = this.NextSequence();
 				this.SequenceCount++;
-				this.InLevel = false;
 			}
 		}
 
 		private int NextSequence() {
-			return Next + 1 >= this.Sequence.Length ? 0 : Next + 1;
+			return this.Next + 1 >= this.Sequence.Length ? 0 : this.Next + 1;
 		}
 	}
 }

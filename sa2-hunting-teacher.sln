@@ -4,6 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.11.35222.181
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sa2-hunting-teacher", "sa2-hunting-teacher\sa2-hunting-teacher.csproj", "{C6E8768F-E119-4F52-B93A-66978AF8C487}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DC430ACA-E0DB-4414-AFD2-5CE22325B712} = {DC430ACA-E0DB-4414-AFD2-5CE22325B712}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sa2-hunting-teacher-helper", "sa2-hunting-teacher-helper\sa2-hunting-teacher-helper.vcxproj", "{DC430ACA-E0DB-4414-AFD2-5CE22325B712}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +16,13 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C6E8768F-E119-4F52-B93A-66978AF8C487}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{C6E8768F-E119-4F52-B93A-66978AF8C487}.Debug|x86.Build.0 = Debug|Any CPU
-		{C6E8768F-E119-4F52-B93A-66978AF8C487}.Release|x86.ActiveCfg = Release|Any CPU
-		{C6E8768F-E119-4F52-B93A-66978AF8C487}.Release|x86.Build.0 = Release|Any CPU
+		{C6E8768F-E119-4F52-B93A-66978AF8C487}.Debug|x86.ActiveCfg = Debug|x86
+		{C6E8768F-E119-4F52-B93A-66978AF8C487}.Debug|x86.Build.0 = Debug|x86
+		{C6E8768F-E119-4F52-B93A-66978AF8C487}.Release|x86.ActiveCfg = Release|x86
+		{DC430ACA-E0DB-4414-AFD2-5CE22325B712}.Debug|x86.ActiveCfg = Debug|Win32
+		{DC430ACA-E0DB-4414-AFD2-5CE22325B712}.Debug|x86.Build.0 = Debug|Win32
+		{DC430ACA-E0DB-4414-AFD2-5CE22325B712}.Release|x86.ActiveCfg = Release|Win32
+		{DC430ACA-E0DB-4414-AFD2-5CE22325B712}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

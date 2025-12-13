@@ -1,22 +1,22 @@
 ﻿using sa2_hunting_teacher.Knuckles;
 using System.Diagnostics;
-using System.Drawing;
-using System.Net;
+using System.IO.MemoryMappedFiles;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace sa2_hunting_teacher {
 	internal partial class SA2Manager : IDisposable {
 		private const string SONIC_EXECUTABLE = "sonic2app";
+		private const string HELPER_DLL_NAME = "hunting-teacher.helper.dll";
+		private static MemoryMappedFile? MemoryMapper;
 		private static bool CanRun = true;
 
 		private IntPtr? sa2;
-		private readonly IntPtr FrameCount = 0x174B038;
-		private readonly IntPtr EmeraldManagerPtr = 0x1AF014C;
-		private readonly IntPtr IsInWinScreenPtr = 0x174B002;
-
 		private readonly Process targetProcess;
 		private readonly HuntingLevel level;
 		private readonly HuntingTeacherForm teacherForm;
+		private readonly MemoryMappedViewAccessor sharedMemory;
+		private HunterTeacherData HunterTeacherData;
 
 		private SA2Manager(Level selection, byte repetitions, HuntingTeacherForm teacherForm) {
 			this.teacherForm = teacherForm;
@@ -39,53 +39,53 @@ namespace sa2_hunting_teacher {
 			});
 
 			this.targetProcess = processes[0];
-			this.sa2 = OpenProcess(ProcessAccessFlags.VMOperation | ProcessAccessFlags.VMWrite | ProcessAccessFlags.VMRead, false, this.targetProcess.Id);
+			this.sa2 = OpenProcess(
+				ProcessAccessFlags.CreateThread |
+				ProcessAccessFlags.QueryInformation |
+				ProcessAccessFlags.VMOperation |
+				ProcessAccessFlags.VMWrite |
+				ProcessAccessFlags.VMRead,
+				false,
+				this.targetProcess.Id
+			);
+
+			if (SA2Manager.MemoryMapper == null) {
+				SA2Manager.MemoryMapper = MemoryMappedFile.CreateOrOpen(
+					"SA2-Hunter-Teacher",
+					Marshal.SizeOf<HunterTeacherData>(),
+					MemoryMappedFileAccess.ReadWrite
+				);
+			}
+
+			this.sharedMemory = SA2Manager.MemoryMapper.CreateViewAccessor();
+			this.ApplyDataDefaults(this.level.LevelId);
+			this.InjectDll();
 		}
 
-		public void SetSeed(int seed) {
-			UIntPtr bytesWritten;
-			byte[] buffer = BitConverter.GetBytes(seed + 1023);
-			bool success = WriteProcessMemory((IntPtr) this.sa2!, FrameCount, buffer, (uint)buffer.Length, out bytesWritten);
-			if (!success) {
-				this.HandleMemoryError("Failed to write set to SA2 process.");
-			}
-
-			this.LogMessage("Writing Seed: " + seed);
+		private void ApplyDataDefaults(LevelId level) {
+			this.HunterTeacherData.currentLevel = (int)level;
+			this.HunterTeacherData.currentSet = -1;
+			this.HunterTeacherData.inWinScreen = false;
+			this.sharedMemory.Write(0, ref this.HunterTeacherData);
 		}
 
-		public bool IsLevelLoading() {
-			byte[] buffer = new byte[4];
-			bool success = ReadProcessMemory((IntPtr)this.sa2!, EmeraldManagerPtr, buffer, 4, out _);
-			if (!success) {
-				this.HandleMemoryError("Failed to access SA2 process.");
-				return false;
+		public void ApplySet(Set set, int seqCount, int seqTotal, int currentRep) {
+			if (this.HunterTeacherData.currentSet >= 0) {
+				return;
 			}
 
-			IntPtr emManagerAddress = new(BitConverter.ToInt32(buffer, 0));
-			if (emManagerAddress == IntPtr.Zero) {
-				return false;
-			}
-
-			byte[] emManagerBuffer = new byte[1];
-			success = ReadProcessMemory((IntPtr)this.sa2!, emManagerAddress, emManagerBuffer, 1, out _);
-			if (!success) {
-				this.HandleMemoryError("Failed to access SA2 process.");
-				return false;
-			}
-
-			byte action = emManagerBuffer[0];
-			return action == 2;
+			this.HunterTeacherData.currentSet = set.Id;
+			this.LogMessage($"Writing Set ({seqCount} / {seqTotal}) For Rep ({currentRep}): " + set);
 		}
 
 		public bool IsInWinScreen() {
-			byte[] buffer = new byte[1];
-			bool success = ReadProcessMemory((IntPtr)this.sa2!, this.IsInWinScreenPtr, buffer, 1, out _);
-			if (!success) {
-				this.HandleMemoryError("Failed to access SA2 process.");
-				return false;
+			if (this.HunterTeacherData.inWinScreen) {
+				this.HunterTeacherData.inWinScreen = false;
+				this.HunterTeacherData.currentSet = -1;
+				return true;
 			}
 
-			return buffer[0] != 0;
+			return false;
 		}
 
 		public void LogMessage(string msg) {
@@ -113,6 +113,45 @@ namespace sa2_hunting_teacher {
 			}
 		}
 
+		private bool DllInjected() {
+			for (int i = 0; i < this.targetProcess.Modules.Count; i++) {
+				if (this.targetProcess.Modules[i].ModuleName.ToLower().Equals(HELPER_DLL_NAME)) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		private void InjectDll() {
+			if (this.DllInjected()) {
+				return;
+			}
+
+			string dllPath = Path.Join(Directory.GetCurrentDirectory(), HELPER_DLL_NAME);
+			IntPtr loadLibraryAddr = GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA");
+			IntPtr allocMemAddress = VirtualAllocEx((IntPtr)this.sa2!, IntPtr.Zero, (uint)((dllPath.Length + 1) * Marshal.SizeOf(typeof(char))), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+			
+			UIntPtr bytesWritten;
+			bool success = WriteProcessMemory((IntPtr)this.sa2!, allocMemAddress, Encoding.Default.GetBytes(dllPath), (uint)((dllPath.Length + 1) * Marshal.SizeOf(typeof(char))), out bytesWritten);
+			if (!success) {
+				this.HandleMemoryError("Failed to inject helper to SA2 process.");
+				return;
+			}
+
+			uint helperExitCode;
+			IntPtr helperThread = CreateRemoteThread((IntPtr)this.sa2!, IntPtr.Zero, 0, loadLibraryAddr, allocMemAddress, 0, IntPtr.Zero);
+			WaitForSingleObject(helperThread, WAIT_INFINITE);
+
+			if (!GetExitCodeThread(helperThread, out helperExitCode)) {
+				this.HandleMemoryError("Failed to inject helper to SA2 process.");
+			}
+
+			if (helperExitCode == 0) {
+				this.HandleMemoryError("Failed to inject helper to SA2 process.");
+			}
+		}
+
 		~SA2Manager() {
 			this.CloseResource();
 		}
@@ -122,8 +161,12 @@ namespace sa2_hunting_teacher {
 			 
 			using (SA2Manager instance = new(selection, repetitions, teacherForm)) {
 				while (CanRun && !instance.level.SequenceComplete() && !instance.targetProcess.HasExited) {
+					instance.sharedMemory.Read(0, out instance.HunterTeacherData);
 					instance.level.RunSequence();
+					instance.sharedMemory.Write(0, ref instance.HunterTeacherData);
 				}
+
+				instance.LogMessage("Sequence Complete!" + Environment.NewLine);
 
 				if (instance.targetProcess.HasExited) {
 					instance.LogMessage("SA2 Process Terminated - Resetting State.");
@@ -142,6 +185,25 @@ namespace sa2_hunting_teacher {
 		[LibraryImport("kernel32.dll")]
 		private static partial IntPtr OpenProcess(ProcessAccessFlags dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, int dwProcessId);
 
+		[LibraryImport("kernel32.dll", EntryPoint = "GetModuleHandleW", StringMarshalling = StringMarshalling.Utf16)]
+		private static partial IntPtr GetModuleHandle(string lpModuleName);
+		
+		[LibraryImport("kernel32.dll", EntryPoint = "GetProcAddress", SetLastError = true)]
+		private static partial IntPtr GetProcAddress(IntPtr hModule, [MarshalAs(UnmanagedType.LPStr)] string procName);
+
+		[LibraryImport("kernel32.dll", SetLastError = true)]
+		private static partial IntPtr VirtualAllocEx(IntPtr hProcess, IntPtr lpAddress, uint dwSize, uint flAllocationType, uint flProtect);
+
+		[LibraryImport("kernel32.dll")]
+		private static partial IntPtr CreateRemoteThread(IntPtr hProcess, IntPtr lpThreadAttributes, uint dwStackSize, IntPtr lpStartAddress, IntPtr lpParameter, uint dwCreationFlags, IntPtr lpThreadId);
+
+		[LibraryImport("kernel32.dll")]
+		private static partial IntPtr WaitForSingleObject(IntPtr hThread, uint dwMilliseconds);
+
+		[LibraryImport("kernel32.dll", SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		public static partial bool GetExitCodeThread(IntPtr hThread, out uint lpExitCode);
+
 		[LibraryImport("kernel32.dll")]
 		[return: MarshalAs(UnmanagedType.Bool)]
 		public static partial bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, uint dwSize, out UIntPtr lpNumberOfBytesRead);
@@ -153,6 +215,12 @@ namespace sa2_hunting_teacher {
 		[LibraryImport("kernel32.dll")]
 		[return: MarshalAs(UnmanagedType.Bool)]
 		public static partial bool CloseHandle(IntPtr hProcess);
+
+		// used for memory allocation
+		private const uint MEM_COMMIT = 0x00001000;
+		private const uint MEM_RESERVE = 0x00002000;
+		private const uint PAGE_READWRITE = 4;
+		private const uint WAIT_INFINITE = 0xFFFFFFFF;
 	}
 
 	[Flags]
@@ -161,6 +229,13 @@ namespace sa2_hunting_teacher {
 		VMWrite = 0x0020,
 		VMOperation = 0x0008,
 		QueryInformation = 0x0400,
+		CreateThread = 0x0002,
 		All = 0x001F0FFF
+	}
+
+	public struct HunterTeacherData {
+		public int currentSet;
+		public int currentLevel;
+		public bool inWinScreen;
 	}
 }
