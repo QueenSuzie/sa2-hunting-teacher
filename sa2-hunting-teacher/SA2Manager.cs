@@ -21,11 +21,11 @@ namespace sa2_hunting_teacher {
 		private SA2Manager(Level selection, byte repetitions, HuntingTeacherForm teacherForm) {
 			this.teacherForm = teacherForm;
 			this.level = selection switch {
-				Level.WildCanyon => new WildCanyon(this, repetitions, teacherForm),
-				Level.PumpkinHill => new PumpkinHill(this, repetitions, teacherForm),
-				Level.AquaticMine => new AquaticMine(this, repetitions, teacherForm),
-				Level.DeathChamber => new DeathChamber(this, repetitions, teacherForm),
-				Level.MeteorHerd => new MeteorHerd(this, repetitions, teacherForm),
+				Level.WildCanyon => new WildCanyon(this, repetitions),
+				Level.PumpkinHill => new PumpkinHill(this, repetitions),
+				Level.AquaticMine => new AquaticMine(this, repetitions),
+				Level.DeathChamber => new DeathChamber(this, repetitions),
+				Level.MeteorHerd => new MeteorHerd(this, repetitions),
 				_ => throw new ArgumentException("Unsupported Level Selected!")
 			};
 
@@ -88,7 +88,7 @@ namespace sa2_hunting_teacher {
 			return buffer[0] != 0;
 		}
 
-		private void LogMessage(string msg) {
+		public void LogMessage(string msg) {
 			this.teacherForm.Invoke(() => {
 				HuntingTeacherForm.AddLogItem(msg);
 			});
@@ -119,7 +119,7 @@ namespace sa2_hunting_teacher {
 
 		public static void Start(Level selection, byte repetitions, HuntingTeacherForm teacherForm) {
 			CanRun = true;
-
+			 
 			using (SA2Manager instance = new(selection, repetitions, teacherForm)) {
 				while (CanRun && !instance.level.SequenceComplete() && !instance.targetProcess.HasExited) {
 					instance.level.RunSequence();

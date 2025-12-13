@@ -7,7 +7,7 @@
 		MeteorHerd
 	};
 
-	internal abstract class HuntingLevel(SA2Manager manager, byte repetitions, HuntingTeacherForm teacherForm) {
+	internal abstract class HuntingLevel(SA2Manager manager, byte repetitions) {
 		protected abstract int[] Sequence { get; }
 
 		private int Next = 0;
@@ -18,8 +18,6 @@
 		protected SA2Manager Manager { get; } = manager;
 
 		protected byte Repetitions { get; } = repetitions;
-
-		protected HuntingTeacherForm TeacherForm { get; } = teacherForm;
 
 		public bool SequenceComplete() {
 			return SequenceCount >= this.Sequence.Length * this.Repetitions;
@@ -32,10 +30,6 @@
 			}
 
 			if (this.LevelLoading) {
-				this.TeacherForm.Invoke(() => {
-					HuntingTeacherForm.AddLogItem("Level Starting!");
-				});
-
 				this.LevelLoading = false;
 				this.Manager.SetSeed(this.Sequence[Next]);
 				this.InLevel = true;
