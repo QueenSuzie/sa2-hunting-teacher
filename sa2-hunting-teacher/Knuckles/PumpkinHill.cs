@@ -106,7 +106,7 @@
 			{ Set.EnumKey(P3Id.GhostTrainsGuidePost), "Ghost train's guidepost." },
 			{ Set.EnumKey(P3Id.PrayForGoodHarvest), "Pray for a good harvest at a holy place." },
 			{ Set.EnumKey(P3Id.PumpkinWithCreepySmileLookingAt), "A pumpkin with a creepy smile is looking at...?" },
-			{ Set.EnumKey(P3Id.FlamingEmeralds), "Flaming Emeralds." },
+			{ Set.EnumKey(P3Id.FlamingEmeralds), "Flaming Emeralds." }
 		};
 
 		internal enum EnemyId {

@@ -113,7 +113,7 @@
 			{ Set.EnumKey(P3Id.TerraceWithTwoLegs), "A terrace with two legs." },
 			{ Set.EnumKey(P3Id.GoldenPath), "The golden path." },
 			{ Set.EnumKey(P3Id.InAStormZoneBelow), "In a storm zone. (below)" },
-			{ Set.EnumKey(P3Id.TheBeginningRoom), "The beginning room." },
+			{ Set.EnumKey(P3Id.TheBeginningRoom), "The beginning room." }
 		};
 
 		internal enum EnemyId {
