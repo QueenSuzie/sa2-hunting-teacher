@@ -16,6 +16,7 @@ class HunterHelper {
 		static void Init();
 		static void LoadLevel();
 		static void AwardWin(signed int* player);
+		static void SetPhysicsAndGiveUpgrades(ObjectMaster* character, int a2);
 		static void LoadEmeraldLocations(EmeraldManager* emManager);
 		static void ExitHandler(int a1, int a2, int a3);
 		static LRESULT __stdcall WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

@@ -4,6 +4,7 @@
 
 UsercallFuncVoid(hAwardWin, (signed int* player), (player), 0x43E6D0, rESI);
 UsercallFuncVoid(hExitHandler, (int a1, int a2, int a3), (a1, a2, a3), 0x4016D0, rECX, rEBX, rESI);
+UsercallFuncVoid(hSetPhysicsAndGiveUpgrades, (ObjectMaster* character, int a2), (character, a2), (intptr_t)0x4599C0, rEAX, rECX);
 FunctionHook<void, EmeraldManager*> hLoadEmeraldLocations((intptr_t)EmeraldLocations_1POr2PGroup3);
 FunctionHook<void> hLoadLevel((intptr_t)0x43C970);
 StdcallFunctionHook<LRESULT, HWND, UINT, WPARAM, LPARAM> hWndProc((intptr_t)0x401810);
@@ -15,6 +16,7 @@ void HunterHelper::Init() {
 
 	hLoadLevel.Hook(HunterHelper::LoadLevel);
 	hAwardWin.Hook(HunterHelper::AwardWin);
+	hSetPhysicsAndGiveUpgrades.Hook(HunterHelper::SetPhysicsAndGiveUpgrades);
 	hLoadEmeraldLocations.Hook(HunterHelper::LoadEmeraldLocations);
 	hExitHandler.Hook(HunterHelper::ExitHandler);
 	hWndProc.Hook(HunterHelper::WndProc);
@@ -33,11 +35,25 @@ void HunterHelper::AwardWin(signed int* player) {
 	hAwardWin.Original(player);
 }
 
+void HunterHelper::SetPhysicsAndGiveUpgrades(ObjectMaster* character, int a2) {
+	hSetPhysicsAndGiveUpgrades.Original(character, a2);
+	if (CurrentLevel != HunterHelper::TeacherDataState->currentLevel) {
+		if (CurrentLevel == LevelIDs_PumpkinHill) {
+			MainCharObj2[0]->Upgrades |= Upgrades_KnucklesShovelClaw;
+		}
+
+		if (CurrentLevel == LevelIDs_EggQuarters) {
+			MainCharObj2[0]->Upgrades |= Upgrades_RougePickNails;
+		}
+	}
+}
+
 void HunterHelper::LoadEmeraldLocations(EmeraldManager* emManager) {
 	if (CurrentLevel != HunterHelper::TeacherDataState->currentLevel) {
 		return hLoadEmeraldLocations.Original(emManager);
 	}
 
+	Life_Count[0] = 99;
 	if (emManager->Piece1.id != -2) {
 		Emerald* p1 = HunterHelper::GetPieceById(emManager, HunterHelper::TeacherDataState->p1Id);
 		*&emManager->Piece1.id = *&p1->id;

@@ -73,7 +73,7 @@
 			repetitions.Name = "repetitions";
 			repetitions.Size = new Size(43, 27);
 			repetitions.TabIndex = 4;
-			repetitions.Value = new decimal(new int[] { 1, 0, 0, 0 });
+			repetitions.Value = new decimal(new int[] { 3, 0, 0, 0 });
 			// 
 			// resetBtn
 			// 
