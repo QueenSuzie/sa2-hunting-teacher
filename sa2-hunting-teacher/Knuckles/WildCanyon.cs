@@ -3,8 +3,7 @@
 		public override LevelId LevelId => LevelId.WildCanyon;
 
 		protected override Set[] Sequence { get; } = [
-			new(17, "In front of the double containers. (right)", "Where the wind blows.", "The beginning room."),
-			new(17, "In front of the double containers. (right)", "Where the wind blows.", "The beginning room.")
+			new(15, 2, 3, "In front of the double containers. (right)", "Where the wind blows.", "The beginning room.")
 		];
 
 		public override string ToString() => "Wild Canyon";

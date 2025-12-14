@@ -64,24 +64,32 @@ namespace sa2_hunting_teacher {
 
 		private void ApplyDataDefaults(LevelId level) {
 			this.HunterTeacherData.currentLevel = (int)level;
-			this.HunterTeacherData.currentSet = -1;
 			this.HunterTeacherData.inWinScreen = false;
+			this.HunterTeacherData.p1Index = 0;
+			this.HunterTeacherData.p2Index = 0;
+			this.HunterTeacherData.p3Index = 0;
 			this.sharedMemory.Write(0, ref this.HunterTeacherData);
 		}
 
 		public void ApplySet(Set set, int seqCount, int seqTotal, int currentRep) {
-			if (this.HunterTeacherData.currentSet >= 0) {
+			if (!this.HunterTeacherData.levelLoading) {
 				return;
 			}
 
-			this.HunterTeacherData.currentSet = set.Id;
+			this.HunterTeacherData.p1Index = set.P1Index;
+			this.HunterTeacherData.p2Index = set.P2Index;
+			this.HunterTeacherData.p3Index = set.P3Index;
+			this.HunterTeacherData.levelLoading = false;
 			this.LogMessage($"Writing Set ({seqCount} / {seqTotal}) For Rep ({currentRep}): " + set);
+			this.LogMessage($"	p1: {this.HunterTeacherData.p1Index}, p2: {this.HunterTeacherData.p2Index}, p3: {this.HunterTeacherData.p3Index}");
 		}
 
 		public bool IsInWinScreen() {
 			if (this.HunterTeacherData.inWinScreen) {
 				this.HunterTeacherData.inWinScreen = false;
-				this.HunterTeacherData.currentSet = -1;
+				this.HunterTeacherData.p1Index = 0;
+				this.HunterTeacherData.p2Index = 0;
+				this.HunterTeacherData.p3Index = 0;
 				return true;
 			}
 
@@ -102,6 +110,11 @@ namespace sa2_hunting_teacher {
 		}
 
 		public void Dispose() {
+			if (SA2Manager.MemoryMapper != null) {
+				SA2Manager.MemoryMapper.Dispose();
+				SA2Manager.MemoryMapper = null;
+			}
+
 			this.CloseResource();
 			GC.SuppressFinalize(this);
 		}
@@ -233,9 +246,13 @@ namespace sa2_hunting_teacher {
 		All = 0x001F0FFF
 	}
 
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	public struct HunterTeacherData {
-		public int currentSet;
 		public int currentLevel;
 		public bool inWinScreen;
+		public bool levelLoading;
+		public int p1Index;
+		public int p2Index;
+		public int p3Index;
 	}
 }
