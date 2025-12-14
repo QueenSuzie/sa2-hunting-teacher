@@ -1244,7 +1244,7 @@ ObjectFunc(Knuckles2PEarthquakeMan_Delete, 0x7362D0);
 FunctionPointer(int, Knuckles2PEarthquakeMan_Load, (int a1, int, int num), 0x7363E0);
 ObjectFunc(Knuckles2PEarthflameMan, 0x736580);
 ObjectFunc(Knuckles2PPowerFlashMan, 0x736EE0);
-FunctionPointer(void, EmeraldLocations_1POr2PGroup3, (EmeManObj2* a1), 0x7380A0);
+FunctionPointer(void, EmeraldLocations_1POr2PGroup3, (EmeraldManager* a1), 0x7380A0);
 ObjectFunc(EmeraldManager_Main, 0x739570);
 ObjectFunc(EmeraldRadar_Update, 0x73A6F0);
 ObjectFunc(EmeraldManager_Delete, 0x73A970);
@@ -3964,9 +3964,9 @@ static inline int Knux_CheckNAct(KnucklesCharObj2* a1, EntityData2* a2, EntityDa
 	return result;
 }
 
-// void __usercall(EmeManObj2 *a1@<esi>)
+// void __usercall(EmeraldManager *a1@<esi>)
 static const void* const EmeraldLocations_2PGroup2Ptr = (void*)0x7387D0;
-static inline void EmeraldLocations_2PGroup2(EmeManObj2* a1)
+static inline void EmeraldLocations_2PGroup2(EmeraldManager* a1)
 {
 	__asm
 	{
@@ -3975,9 +3975,9 @@ static inline void EmeraldLocations_2PGroup2(EmeManObj2* a1)
 	}
 }
 
-// void __usercall(EmeManObj2 *a1@<esi>)
+// void __usercall(EmeraldManager *a1@<esi>)
 static const void* const EmeraldLocations_2PGroup1Ptr = (void*)0x739340;
-static inline void EmeraldLocations_2PGroup1(EmeManObj2* a1)
+static inline void EmeraldLocations_2PGroup1(EmeraldManager* a1)
 {
 	__asm
 	{

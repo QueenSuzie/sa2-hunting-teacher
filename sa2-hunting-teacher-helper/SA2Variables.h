@@ -618,7 +618,7 @@ DataPointer(ObjectMaster *, FogtaskManExec_ptr, 0x1AEFEB4);
 DataPointer(ObjectMaster *, PauseHintExec_ptr, 0x1AEFF60);
 DataPointer(ObjectMaster *, ChaoKeyTaskObj, 0x1AEFF64);
 DataPointer(ObjectMaster *, PosBar2PMan_ptr, 0x1AF0148);
-DataPointer(EmeManObj2 *, EmeraldManagerObj2, 0x1AF014C);
+DataPointer(EmeraldManager *, EmeraldManagerObj2, 0x1AF014C);
 DataPointer(ObjectMaster *, ObjSetManExec_ptr, 0x1AF0208);
 DataPointer(HMODULE **, datadllhandle, 0x1AF0220);
 DataPointer(LaunchConfig *, MainUserConfig, 0x1AF19EC);

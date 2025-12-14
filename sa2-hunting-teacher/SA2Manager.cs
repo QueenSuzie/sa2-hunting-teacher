@@ -65,9 +65,9 @@ namespace sa2_hunting_teacher {
 		private void ApplyDataDefaults(LevelId level) {
 			this.HunterTeacherData.currentLevel = (int)level;
 			this.HunterTeacherData.inWinScreen = false;
-			this.HunterTeacherData.p1Index = 0;
-			this.HunterTeacherData.p2Index = 0;
-			this.HunterTeacherData.p3Index = 0;
+			this.HunterTeacherData.p1Id = 0;
+			this.HunterTeacherData.p2Id = 0;
+			this.HunterTeacherData.p3Id = 0;
 			this.sharedMemory.Write(0, ref this.HunterTeacherData);
 		}
 
@@ -76,9 +76,9 @@ namespace sa2_hunting_teacher {
 				return;
 			}
 
-			this.HunterTeacherData.p1Index = set.P1Index;
-			this.HunterTeacherData.p2Index = set.P2Index;
-			this.HunterTeacherData.p3Index = set.P3Index;
+			this.HunterTeacherData.p1Id = set.P1Id;
+			this.HunterTeacherData.p2Id = set.P2Id;
+			this.HunterTeacherData.p3Id = set.P3Id;
 			this.HunterTeacherData.levelLoading = false;
 			this.LogMessage($"Writing Set ({seqCount} / {seqTotal}) For Rep ({currentRep}): " + set);
 		}
@@ -86,9 +86,9 @@ namespace sa2_hunting_teacher {
 		public bool IsInWinScreen() {
 			if (this.HunterTeacherData.inWinScreen) {
 				this.HunterTeacherData.inWinScreen = false;
-				this.HunterTeacherData.p1Index = 0;
-				this.HunterTeacherData.p2Index = 0;
-				this.HunterTeacherData.p3Index = 0;
+				this.HunterTeacherData.p1Id = 0;
+				this.HunterTeacherData.p2Id = 0;
+				this.HunterTeacherData.p3Id = 0;
 				return true;
 			}
 
@@ -250,8 +250,8 @@ namespace sa2_hunting_teacher {
 		public int currentLevel;
 		public bool inWinScreen;
 		public bool levelLoading;
-		public int p1Index;
-		public int p2Index;
-		public int p3Index;
+		public int p1Id;
+		public int p2Id;
+		public int p3Id;
 	}
 }

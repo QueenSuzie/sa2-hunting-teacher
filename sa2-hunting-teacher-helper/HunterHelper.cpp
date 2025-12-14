@@ -4,7 +4,7 @@
 
 UsercallFuncVoid(hAwardWin, (signed int* player), (player), 0x43E6D0, rESI);
 UsercallFuncVoid(hExitHandler, (int a1, int a2, int a3), (a1, a2, a3), 0x4016D0, rECX, rEBX, rESI);
-FunctionHook<void, EmeManObj2*> hLoadEmeraldLocations((intptr_t)EmeraldLocations_1POr2PGroup3);
+FunctionHook<void, EmeraldManager*> hLoadEmeraldLocations((intptr_t)EmeraldLocations_1POr2PGroup3);
 FunctionHook<void> hLoadLevel((intptr_t)0x43C970);
 StdcallFunctionHook<LRESULT, HWND, UINT, WPARAM, LPARAM> hWndProc((intptr_t)0x401810);
 
@@ -33,34 +33,71 @@ void HunterHelper::AwardWin(signed int* player) {
 	hAwardWin.Original(player);
 }
 
-void HunterHelper::LoadEmeraldLocations(EmeManObj2* emManager) {
+void HunterHelper::LoadEmeraldLocations(EmeraldManager* emManager) {
 	if (CurrentLevel != HunterHelper::TeacherDataState->currentLevel) {
 		return hLoadEmeraldLocations.Original(emManager);
 	}
 
-	EmeManThing* p1 = &emManager->ptr_a[HunterHelper::TeacherDataState->p1Index];
-	EmeManThing* p2 = &emManager->ptr_a[HunterHelper::TeacherDataState->p2Index];
-	EmeManThing* p3 = &emManager->ptr_a[HunterHelper::TeacherDataState->p3Index];
-
-	if (emManager->byte2C[0].byte0 != -2) {
-		*(_DWORD*)&emManager->byte2C[0].byte0 = *(_DWORD*)&p1->byte0;
-		emManager->byte2C[0].v = p1->v;
-		emManager->byte5++;
+	if (emManager->Piece1.id != -2) {
+		Emerald* p1 = HunterHelper::GetPieceById(emManager, HunterHelper::TeacherDataState->p1Id);
+		*&emManager->Piece1.id = *&p1->id;
+		emManager->Piece1.v = p1->v;
+		emManager->EmeraldsSpawned++;
 	}
 
-	if (emManager->byte2C[1].byte0 != -2) {
-		*(_DWORD*)&emManager->byte2C[1].byte0 = *(_DWORD*)&p2->byte0;
-		emManager->byte2C[1].v = p2->v;
-		emManager->byte1 = ((_DWORD*)&p2->byte0)[1];
-		emManager->byte5++;
+	if (emManager->Piece2.id != -2) {
+		Emerald* p2 = HunterHelper::GetPieceById(emManager, HunterHelper::TeacherDataState->p2Id);
+		*&emManager->Piece2.id = *&p2->id;
+		emManager->Piece2.v = p2->v;
+		emManager->EmeraldsSpawned++;
 	}
 
-	if (emManager->byte2C[2].byte0 != -2) {
-		*(_DWORD*)&emManager->byte2C[2].byte0 = *(_DWORD*)&p3->byte0;
-		emManager->byte2C[2].v = p3->v;
-		emManager->byte1 = ((_DWORD*)&p3->byte0)[1];
-		emManager->byte5++;
+	if (emManager->Piece3.id != -2) {
+		Emerald* p3 = HunterHelper::GetPieceById(emManager, HunterHelper::TeacherDataState->p3Id);
+		*&emManager->Piece3.id = *&p3->id;
+		emManager->Piece3.v = p3->v;
+		emManager->EmeraldsSpawned++;
 	}
+}
+
+Emerald* HunterHelper::GetPieceById(EmeraldManager* emManager, int id) {
+	byte idLowByte = id & 0xFF;
+	Emerald* emeralds = nullptr;
+	int emeraldsLength = 0;
+	switch (idLowByte) {
+		case 0:
+		case 2:
+		case 5:
+			emeralds = emManager->Slot2Emeralds;
+			emeraldsLength = emManager->Slot2ArrayLen;
+			break;
+		case 1:
+		case 3:
+			emeralds = emManager->Slot1Emeralds;
+			emeraldsLength = emManager->Slot1ArrayLen;
+			break;
+		case 4:
+		case 7:
+		case 8:
+			emeralds = emManager->Slot3Emeralds;
+			emeraldsLength = emManager->Slot3ArrayLen;
+			break;
+		case 0xA:
+			emeralds = emManager->EnemySlotEmeralds;
+			emeraldsLength = emManager->EnemySlotArrayLen;
+			break;
+	}
+
+	for (int i = 0; i < emeraldsLength; i++) {
+		if (emeralds[i].id == id) {
+			return &emeralds[i];
+		}
+	}
+
+	MessageBox(NULL, L"Invalid ID Detected! Please report this along with the level and set that was last loaded.", L"Error!", MB_OK | MB_ICONERROR);
+	exit(1);
+
+	return nullptr;
 }
 
 void HunterHelper::OpenSharedMemory() {

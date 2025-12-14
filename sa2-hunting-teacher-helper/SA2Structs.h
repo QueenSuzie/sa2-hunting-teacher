@@ -1646,45 +1646,36 @@ struct LoopHead
 	ObjectFuncPtr Object;
 };
 
-struct EmeManThing
+struct Emerald
 {
-	char byte0;
-	char byte1;
-	char byte2;
-	char byte3;
+	int id;
 	NJS_VECTOR v;
 };
 
-struct EmeManObj2
+struct EmeraldManager
 {
 	uint8_t Action;
 	uint8_t byte1;
 	uint8_t byte2;
 	uint8_t HintCount;
 	uint8_t Status;
-	uint8_t byte5;
-	uint8_t byte6;
-	uint8_t byte7;
-	uint8_t byte8;
-	uint8_t byte9;
+	uint8_t EmeraldsSpawned;
+	uint8_t Slot1ArrayLen;
+	uint8_t Slot2ArrayLen;
+	uint8_t Slot3ArrayLen;
+	uint8_t EnemySlotArrayLen;
 	uint8_t byteA;
 	uint8_t byteB;
-	uint8_t byteC;
-	uint8_t byteD;
-	uint8_t fE[2];
-	NJS_VECTOR dword10;
-	uint8_t byte1C;
-	uint8_t byte1D;
-	uint8_t f1E[2];
-	uint32_t dword20;
-	uint32_t dword24;
-	uint32_t dword28;
-	EmeManThing byte2C[3];
-	EmeManThing* ptr_a;
-	EmeManThing* ptr_b;
-	EmeManThing* ptr_c;
-	EmeManThing* ptr_d;
-	uint32_t dword6C;
+	Emerald duplicate_emerald_1;
+	Emerald duplicate_emerald_2;
+	Emerald Piece1;
+	Emerald Piece2;
+	Emerald Piece3;
+	Emerald* Slot1Emeralds;
+	Emerald* Slot2Emeralds;
+	Emerald* Slot3Emeralds;
+	Emerald* EnemySlotEmeralds;
+	uint32_t timer;
 	NJS_TEXLIST* TexList;
 };
 
