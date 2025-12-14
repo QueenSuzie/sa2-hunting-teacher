@@ -146,7 +146,7 @@
 			ThreeMetalBarrels = 0x0403,
 			DoubleContainersChurch = 0x0503,
 			DoubleContainersPumpkin = 0x0603,
-			FarmHouse = 0x0703,
+			FarmHouse = 0x0703
 		}
 		
 		internal enum P2Id {
