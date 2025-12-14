@@ -81,7 +81,6 @@ namespace sa2_hunting_teacher {
 			this.HunterTeacherData.p3Index = set.P3Index;
 			this.HunterTeacherData.levelLoading = false;
 			this.LogMessage($"Writing Set ({seqCount} / {seqTotal}) For Rep ({currentRep}): " + set);
-			this.LogMessage($"	p1: {this.HunterTeacherData.p1Index}, p2: {this.HunterTeacherData.p2Index}, p3: {this.HunterTeacherData.p3Index}");
 		}
 
 		public bool IsInWinScreen() {
