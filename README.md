@@ -1,4 +1,4 @@
-# Project Title
+# SA2 Hunting Teacher
 
 This project aims to help new SA2 runners learn hunting pieces efficiently.
 
