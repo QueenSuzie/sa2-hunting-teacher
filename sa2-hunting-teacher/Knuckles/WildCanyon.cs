@@ -3,12 +3,22 @@
 		public override LevelId LevelId => LevelId.WildCanyon;
 
 		protected override Set[] Sequence { get; } = [
-			Set.Create(P1Id.InFrontDoubleContainersLeft, P2Id.UnderTheElbowHead, P3Id.SandyPathToTheHeadOfStoneStatue, PieceToHint),
+			Set.Create(P1Id.InFrontDoubleContainersLeft, P2Id.UnderTheElbowHead, P3Id.SandyPathToTheHeadOfStoneStatue, WildCanyon.PieceToHint),
 		];
 
 		public override string ToString() => "Wild Canyon";
 
 		public static Dictionary<int, string> PieceToHint { get; } = new Dictionary<int, string>{
+			{ Set.EnumKey(EnemyId.SuspendedCeilingEnemy), "A suspended ceiling. (enemy)" },
+			{ Set.EnumKey(EnemyId.SandyPathRhino), "On a sandy path to a stone statue head. (Rhino)" },
+			{ Set.EnumKey(EnemyId.SandyPathNearHawk), "On a sandy path to a stone statue head. (near Hawk)" },
+			{ Set.EnumKey(EnemyId.SandyPathFarHawk), "On a sandy path to a stone statue head. (far Hawk)" },
+			{ Set.EnumKey(EnemyId.NearSixPillarsRedCircle), "Near the six pillars. (red circle)" },
+			{ Set.EnumKey(EnemyId.NearSixPillarsMetalBoxes), "Near the six pillars. (metal boxes)" },
+			{ Set.EnumKey(EnemyId.NearSixPillarsScaryEyes), "Near the six pillars. (scary eyes)" },
+			{ Set.EnumKey(EnemyId.NearSixPillarsRailways), "Near the six pillars. (railways)" },
+			{ Set.EnumKey(EnemyId.StoneStatueQuartetHeadSide), "Stone statue quartet. (head side)" },
+			{ Set.EnumKey(EnemyId.StoneStatueQuartetLonelySide), "Stone statue quartet. (lonely side)" },
 			{ Set.EnumKey(P1Id.InFrontDoubleContainersLeft), "In front of the double containers. (left)" },
 			{ Set.EnumKey(P1Id.InFrontDoubleContainersRight), "In front of the double containers. (right)" },
 			{ Set.EnumKey(P1Id.InFrontBirdChestUnderFourFeathers), "In front of a bird chest under four feathers." },
@@ -41,16 +51,6 @@
 			{ Set.EnumKey(P1Id.TreasureOfFourStoneStatues), "A treasure of four stone statues." },
 			{ Set.EnumKey(P1Id.BirdBoxRedPing), "A bird box." },
 			{ Set.EnumKey(P1Id.SwirlingContainer), "A swirling container." },
-			{ Set.EnumKey(EnemyId.SuspendedCeilingEnemy), "A suspended ceiling. (enemy)" },
-			{ Set.EnumKey(EnemyId.SandyPathRhino), "On a sandy path to a stone statue head. (Rhino)" },
-			{ Set.EnumKey(EnemyId.SandyPathNearHawk), "On a sandy path to a stone statue head. (near Hawk)" },
-			{ Set.EnumKey(EnemyId.SandyPathFarHawk), "On a sandy path to a stone statue head. (far Hawk)" },
-			{ Set.EnumKey(EnemyId.NearSixPillarsRedCircle), "Near the six pillars. (red circle)" },
-			{ Set.EnumKey(EnemyId.NearSixPillarsMetalBoxes), "Near the six pillars. (metal boxes)" },
-			{ Set.EnumKey(EnemyId.NearSixPillarsScaryEyes), "Near the six pillars. (scary eyes)" },
-			{ Set.EnumKey(EnemyId.NearSixPillarsRailways), "Near the six pillars. (railways)" },
-			{ Set.EnumKey(EnemyId.StoneStatueQuartetHeadSide), "Stone statue quartet. (head side)" },
-			{ Set.EnumKey(EnemyId.StoneStatueQuartetLonelySide), "Stone statue quartet. (lonely side)" },
 			{ Set.EnumKey(P2Id.ArmoredCarpoolCenter), "Armored carpool. (center)" },
 			{ Set.EnumKey(P2Id.ArmoredCarpoolCorner), "Armored carpool. (corner)" },
 			{ Set.EnumKey(P2Id.AtTheFootOfAPillar), "At the foot of a pillar." },
