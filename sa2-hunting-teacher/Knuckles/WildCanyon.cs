@@ -1,9 +1,4 @@
-﻿using System.IO;
-using System.Reflection.Metadata;
-using System.Reflection;
-using System.Windows.Forms;
-
-namespace sa2_hunting_teacher.Knuckles {
+﻿namespace sa2_hunting_teacher.Knuckles {
 	internal class WildCanyon(SA2Manager manager, byte repetitions) : HuntingLevel(manager, repetitions) {
 		public override LevelId LevelId => LevelId.WildCanyon;
 
