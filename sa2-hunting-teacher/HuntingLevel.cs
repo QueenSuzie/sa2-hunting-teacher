@@ -4,7 +4,11 @@
 		PumpkinHill,
 		AquaticMine,
 		DeathChamber,
-		MeteorHerd
+		MeteorHerd,
+		DryLagoon,
+		EggQuarters,
+		SecurityHall,
+		MadSpace
 	};
 
 	internal abstract class HuntingLevel(SA2Manager manager, byte repetitions) {
