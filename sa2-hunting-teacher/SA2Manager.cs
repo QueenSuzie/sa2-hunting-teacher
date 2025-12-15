@@ -1,4 +1,5 @@
 ﻿using sa2_hunting_teacher.Knuckles;
+using sa2_hunting_teacher.Rouge;
 using System.Diagnostics;
 using System.IO.MemoryMappedFiles;
 using System.Runtime.InteropServices;
@@ -26,6 +27,10 @@ namespace sa2_hunting_teacher {
 				Level.AquaticMine => new AquaticMine(this, repetitions),
 				Level.DeathChamber => new DeathChamber(this, repetitions),
 				Level.MeteorHerd => new MeteorHerd(this, repetitions),
+				Level.DryLagoon => new DryLagoon(this, repetitions),
+				Level.EggQuarters => new EggQuarters(this, repetitions),
+				Level.SecurityHall => new SecurityHall(this, repetitions),
+				Level.MadSpace => new MadSpace(this, repetitions),
 				_ => throw new ArgumentException("Unsupported Level Selected!")
 			};
 

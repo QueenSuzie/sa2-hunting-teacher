@@ -1,4 +1,4 @@
-﻿namespace sa2_hunting_teacher.Knuckles {
+﻿namespace sa2_hunting_teacher.Rouge {
 	internal class EggQuarters(SA2Manager manager, byte repetitions) : HuntingLevel(manager, repetitions) {
 		public override LevelId LevelId => LevelId.EggQuarters;
 
