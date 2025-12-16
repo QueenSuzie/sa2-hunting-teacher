@@ -55,5 +55,16 @@ namespace sa2_hunting_teacher {
 			repetitions.Enabled = true;
 			startBtn.Enabled = true;
 		}
+
+		private void LevelSelector_SelectedIndexChanged(object sender, EventArgs e) {
+			mspReverseHints.Visible = false;
+			if (this.levelSelector.SelectedItem != null && ((KeyValuePair<Level, string>)this.levelSelector.SelectedItem).Key == Level.MadSpace) {
+				mspReverseHints.Visible = true;
+			}
+		}
+
+		public bool MspReversedHints() {
+			return mspReverseHints.Checked;
+		}
 	}
 }

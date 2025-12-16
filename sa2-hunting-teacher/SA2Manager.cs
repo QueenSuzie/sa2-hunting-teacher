@@ -63,14 +63,14 @@ namespace sa2_hunting_teacher {
 			}
 
 			this.sharedMemory = SA2Manager.MemoryMapper.CreateViewAccessor();
-			this.ApplyDataDefaults(this.level.LevelId);
+			this.ApplyDataDefaults(this.level.LevelId, teacherForm.MspReversedHints());
 			this.InjectDll();
 		}
 
-		private void ApplyDataDefaults(LevelId level) {
+		private void ApplyDataDefaults(LevelId level, bool mspReversedHints) {
 			this.HunterTeacherData.currentLevel = (int)level;
 			this.HunterTeacherData.inWinScreen = false;
-			this.HunterTeacherData.mspReversedHints = false;
+			this.HunterTeacherData.mspReversedHints = mspReversedHints;
 			this.HunterTeacherData.p1Id = 0;
 			this.HunterTeacherData.p2Id = 0;
 			this.HunterTeacherData.p3Id = 0;
