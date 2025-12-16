@@ -33,6 +33,7 @@ namespace sa2_hunting_teacher {
 			Level selectedLevel = (Level)levelSelector.SelectedValue!;
 			startBtn.Enabled = false;
 			repetitions.Enabled = false;
+			mspReverseHints.Enabled = false;
 			resetBtn.Enabled = true;
 
 			Task.Run(() => {
@@ -53,6 +54,7 @@ namespace sa2_hunting_teacher {
 			SA2Manager.Stop();
 			resetBtn.Enabled = false;
 			repetitions.Enabled = true;
+			mspReverseHints.Enabled = true;
 			startBtn.Enabled = true;
 		}
 
