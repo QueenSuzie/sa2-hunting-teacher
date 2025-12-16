@@ -1,24 +1,34 @@
-using System.Security.AccessControl;
-
 namespace sa2_hunting_teacher {
 	public partial class HuntingTeacherForm : Form {
 		private static TextBox? currentLogBox;
-		private static readonly Dictionary<Level, string> SupportedLevels = new() {
-			{ Level.WildCanyon, "Wild Canyon" },
-			{ Level.PumpkinHill, "Pumpkin Hill" },
-			{ Level.AquaticMine, "Aquatic Mine" },
-			{ Level.DeathChamber, "Death Chamber" },
-			{ Level.MeteorHerd, "Meteor Herd" },
+
+		public sealed class LevelRow {
+			public Level Level { get; init; } = default;
+			public string Text { get; init; } = "";
+			public string Group { get; init; } = "";
+		}
+
+		private static readonly Dictionary<Level, (string LevelText, string Category)> SupportedLevels = new() {
+			{ Level.WildCanyon, ("Wild Canyon", "Knuckles") },
+			{ Level.PumpkinHill, ("Pumpkin Hill", "Knuckles") },
+			{ Level.AquaticMine, ("Aquatic Mine", "Knuckles") },
+			{ Level.DeathChamber, ("Death Chamber", "Knuckles") },
+			{ Level.MeteorHerd, ("Meteor Herd", "Knuckles") },
 		};
 
 		public HuntingTeacherForm() {
 			InitializeComponent();
 
-			levelSelector.DataSource = SupportedLevels.ToList();
-			levelSelector.DisplayMember = "Value";
-			levelSelector.ValueMember = "Key";
-			levelSelector.SelectedIndex = 0;
 			currentLogBox = logBox;
+			levelSelector.DisplayMember = nameof(LevelRow.Text);
+			levelSelector.ValueMember = nameof(LevelRow.Level);
+			levelSelector.GroupMember = nameof(LevelRow.Group);
+			levelSelector.SelectedValue = Level.WildCanyon;
+			levelSelector.DataSource = SupportedLevels.Select(kvp => new LevelRow {
+				Level = kvp.Key,
+				Text = kvp.Value.LevelText,
+				Group = kvp.Value.Category
+			}).ToList();
 		}
 
 		public static void AddLogItem(string value) {
@@ -27,6 +37,9 @@ namespace sa2_hunting_teacher {
 			}
 
 			currentLogBox.AppendText(value + Environment.NewLine);
+		}
+		public bool MspReversedHints() {
+			return mspReverseHints.Checked;
 		}
 
 		private void StartBtn_Click(object sender, EventArgs e) {
@@ -60,13 +73,9 @@ namespace sa2_hunting_teacher {
 
 		private void LevelSelector_SelectedIndexChanged(object sender, EventArgs e) {
 			mspReverseHints.Visible = false;
-			if (this.levelSelector.SelectedItem != null && ((KeyValuePair<Level, string>)this.levelSelector.SelectedItem).Key == Level.MadSpace) {
+			if (this.levelSelector.SelectedItem != null && ((LevelRow)this.levelSelector.SelectedItem).Level == Level.MadSpace) {
 				mspReverseHints.Visible = true;
 			}
-		}
-
-		public bool MspReversedHints() {
-			return mspReverseHints.Checked;
 		}
 	}
 }

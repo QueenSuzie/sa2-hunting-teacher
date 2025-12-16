@@ -1,4 +1,6 @@
-﻿namespace sa2_hunting_teacher
+﻿using sa2_hunting_teacher.DropdownControls;
+
+namespace sa2_hunting_teacher
 {
     partial class HuntingTeacherForm
     {
@@ -35,7 +37,7 @@
 			resetBtn = new Button();
 			startBtn = new Button();
 			label1 = new Label();
-			levelSelector = new ComboBox();
+			levelSelector = new GroupedComboBox();
 			panel2 = new Panel();
 			logBox = new TextBox();
 			panel1.SuspendLayout();
@@ -124,6 +126,7 @@
 			// 
 			// levelSelector
 			// 
+			levelSelector.DataSource = null;
 			levelSelector.DropDownStyle = ComboBoxStyle.DropDownList;
 			levelSelector.FormattingEnabled = true;
 			levelSelector.Location = new Point(105, 12);
@@ -177,12 +180,12 @@
 		private Panel panel1;
 		private Panel panel2;
 		private Label label1;
-		private ComboBox levelSelector;
 		private Button resetBtn;
 		private Button startBtn;
 		private TextBox logBox;
 		private NumericUpDown repetitions;
 		private Label label2;
 		private CheckBox mspReverseHints;
+		private GroupedComboBox levelSelector;
 	}
 }
