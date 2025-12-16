@@ -57,57 +57,36 @@ bool HunterHelper::IsShiftJISCharacter(uint8_t leadByte, uint8_t trailByte) {
 		&& ((trailByte >= 0x40 && trailByte <= 0x7E) || (trailByte >= 0x80 && trailByte <= 0xFC));
 }
 
-void HunterHelper::ReverseShiftJISLine(uint8_t* line, size_t len) {
-	struct Token { const uint8_t* ptr; size_t len; };
-	std::vector<Token> tokens;
-	tokens.reserve(len);
-
-	for (size_t i = 0; i < len; i++) {
-		if ((i + 1) < len && HunterHelper::IsShiftJISCharacter(line[i], line[i + 1])) {
-			tokens.push_back({ line + i, 2 });
-			i++;
-		} else {
-			tokens.push_back({ line + i, 1 });
-		}
-	}
-
-	std::vector<uint8_t> temp;
-	temp.reserve(len);
-
-	for (auto it = tokens.rbegin(); it != tokens.rend(); ++it) {
-		temp.insert(temp.end(), it->ptr, it->ptr + it->len);
-	}
-
-	if (temp.size() == len) {
-		std::memcpy(line, temp.data(), len);
-	}
-}
-
-void HunterHelper::ReverseShiftJISHint(uint8_t* hint) {
-	// ensure hint is properly null terminated
-	uint8_t* nul = static_cast<uint8_t*>(std::memchr(hint, 0, HunterHelper::MAX_STR_LEN));
-	if (!nul) {
+void HunterHelper::ReverseShiftJISHint(uint8_t* hintStart, uint8_t* hintEnd) {
+	if (!hintStart || !hintEnd || hintStart >= hintEnd) {
 		return;
 	}
 
-	size_t hintLen = size_t(nul - hint);
-	size_t pos = 0;
-	while (pos < hintLen) {
-		size_t lineEnd = pos;
-		while (lineEnd < hintLen && hint[lineEnd] != '\n') {
-			++lineEnd;
+	struct Token { uint8_t byte0, byte1; bool doubleChar; };
+	std::vector<Token> tokens;
+
+	uint8_t* c = hintStart;
+	while (c < hintEnd) {
+		uint8_t byte0 = *c++;
+
+		// ignore game control bytes
+		if (byte0 == 0x0E || byte0 == 0x0F) {
+			tokens.push_back({ byte0, 0, false });
+		} else if (*c != 0x00 && HunterHelper::IsShiftJISCharacter(byte0, *c)) {
+			uint8_t byte1 = *c++;
+			tokens.push_back({ byte0, byte1, true });
+;		} else {
+			tokens.push_back({ byte0, 0, false });
 		}
+	}
 
-		size_t lineLen = lineEnd - pos;
-
-		// handle windows style \r\n new lines.
-		if (lineLen && hint[pos + lineLen - 1] == '\r') {
-			--lineLen;
+	std::reverse(tokens.begin(), tokens.end());
+	uint8_t* out = hintStart;
+	for (const auto& token : tokens) {
+		*out++ = token.byte0;
+		if (token.doubleChar) {
+			*out++ = token.byte1;
 		}
-
-		HunterHelper::ReverseShiftJISLine(hint + pos, lineLen);
-
-		pos = (lineEnd < hintLen) ? (lineEnd + 1) : lineEnd;
 	}
 }
 
@@ -127,12 +106,33 @@ void* HunterHelper::EmeraldHintsFileLoaderInterceptor(const void* hintsFileName)
 
 		char* hint = reinterpret_cast<char*>(base + off);
 		if (i % 3 == 0) {
+			uint8_t* hintTextStart = reinterpret_cast<uint8_t*>(hint);
+			// command options to skip
+			if (*hintTextStart == 0x0C) {
+				hintTextStart++;
+				while (*hintTextStart != 0x00 && *hintTextStart != ' ' && *hintTextStart != ':') {
+					hintTextStart++;
+				}
+
+				if (*hintTextStart != 0x00) {
+					hintTextStart++;
+				}
+			}
+
+			// center command option
+			if (*hintTextStart == 0x07) {
+				hintTextStart++;
+			}
+
+			uint8_t* hintTextEnd = hintTextStart;
+			while (*hintTextEnd != 0x00 && *hintTextEnd != 0x0C) {
+				hintTextEnd++;
+			}
+
 			if (TextLanguage == Language_Japanese) {
-				HunterHelper::ReverseShiftJISHint((uint8_t*)(hint + 4));
+				HunterHelper::ReverseShiftJISHint(hintTextStart, hintTextEnd);
 			} else {
-				char* start = hint + 4;
-				size_t len = std::strlen(start);
-				std::reverse(start, start + len);
+				std::reverse(hintTextStart, hintTextEnd);
 			}
 		}
 	}
