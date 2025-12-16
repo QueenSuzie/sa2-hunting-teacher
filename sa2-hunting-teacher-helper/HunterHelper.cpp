@@ -8,7 +8,7 @@ UsercallFuncVoid(hAwardWin, (signed int* player), (player), 0x43E6D0, rESI);
 UsercallFuncVoid(hExitHandler, (int a1, int a2, int a3), (a1, a2, a3), 0x4016D0, rECX, rEBX, rESI);
 UsercallFuncVoid(hSetPhysicsAndGiveUpgrades, (ObjectMaster* character, int a2), (character, a2), (intptr_t)0x4599C0, rEAX, rECX);
 FunctionHook<void*, const void*> hLoadStageHintsFile((intptr_t)0x73B6C0);
-FunctionHook<void, EmeraldManager*> hLoadEmeraldLocations((intptr_t)EmeraldLocations_1POr2PGroup3);
+FunctionHook<void, EmeraldManager*> hLoadEmeraldLocations((intptr_t)0x7380A0);
 FunctionHook<void> hLoadLevel((intptr_t)0x43C970);
 StdcallFunctionHook<LRESULT, HWND, UINT, WPARAM, LPARAM> hWndProc((intptr_t)0x401810);
 
@@ -129,7 +129,7 @@ void* HunterHelper::EmeraldHintsFileLoaderInterceptor(const void* hintsFileName)
 				hintTextEnd++;
 			}
 
-			if (TextLanguage == Language_Japanese) {
+			if (CurrentLanguage == Language_Japanese) {
 				HunterHelper::ReverseShiftJISHint(hintTextStart, hintTextEnd);
 			} else {
 				std::reverse(hintTextStart, hintTextEnd);

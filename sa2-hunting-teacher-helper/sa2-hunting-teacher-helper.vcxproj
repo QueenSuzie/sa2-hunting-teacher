@@ -62,6 +62,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)SA2 Headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -81,6 +82,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <DebugInformationFormat>None</DebugInformationFormat>
+      <AdditionalIncludeDirectories>$(ProjectDir)SA2 Headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -92,16 +94,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
-    <ClInclude Include="FunctionHook.h" />
     <ClInclude Include="HunterHelper.h" />
-    <ClInclude Include="MemAccess.h" />
-    <ClInclude Include="ninja.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="SA2Enums.h" />
-    <ClInclude Include="SA2Functions.h" />
-    <ClInclude Include="SA2Structs.h" />
-    <ClInclude Include="SA2Variables.h" />
-    <ClInclude Include="UsercallFunctionHandler.h" />
+    <ClInclude Include="SA2 Headers\FunctionHook.h" />
+    <ClInclude Include="SA2 Headers\MemAccess.h" />
+    <ClInclude Include="SA2 Headers\ninja.h" />
+    <ClInclude Include="SA2 Headers\SA2Enums.h" />
+    <ClInclude Include="SA2 Headers\SA2Structs.h" />
+    <ClInclude Include="SA2 Headers\UsercallFunctionHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />

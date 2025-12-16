@@ -11,10 +11,9 @@
 #include "framework.h"
 #include <WTypes.h>
 #include "MemAccess.h"
+#include "ninja.h"
 #include "SA2Enums.h"
 #include "SA2Structs.h"
-#include "SA2Variables.h"
-#include "SA2Functions.h"
 #include "FunctionHook.h"
 #include "UsercallFunctionHandler.h"
 #include "HunterHelper.h"

@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\SA2 Headers">
+      <UniqueIdentifier>{63a7cdba-cc4d-4911-b802-fbcfe5b67709}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -24,29 +27,23 @@
     <ClInclude Include="HunterHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FunctionHook.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="SA2 Headers\UsercallFunctionHandler.h">
+      <Filter>Header Files\SA2 Headers</Filter>
     </ClInclude>
-    <ClInclude Include="MemAccess.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="SA2 Headers\SA2Structs.h">
+      <Filter>Header Files\SA2 Headers</Filter>
     </ClInclude>
-    <ClInclude Include="SA2Structs.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="SA2 Headers\SA2Enums.h">
+      <Filter>Header Files\SA2 Headers</Filter>
     </ClInclude>
-    <ClInclude Include="ninja.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="SA2 Headers\ninja.h">
+      <Filter>Header Files\SA2 Headers</Filter>
     </ClInclude>
-    <ClInclude Include="SA2Enums.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="SA2 Headers\MemAccess.h">
+      <Filter>Header Files\SA2 Headers</Filter>
     </ClInclude>
-    <ClInclude Include="SA2Functions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SA2Variables.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UsercallFunctionHandler.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="SA2 Headers\FunctionHook.h">
+      <Filter>Header Files\SA2 Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

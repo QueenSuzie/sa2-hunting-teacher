@@ -12,6 +12,11 @@ struct HunterTeacherData {
 };
 #pragma pack(pop)
 
+DataPointer(__int16, CurrentLevel, 0x1934B70);
+DataPointer(char, CurrentLanguage, 0x174AFD1);
+DataArray(__int16, Life_Count, 0x174B024, 2);
+DataArray(CharObj2Base*, MainCharObj2, 0x1DE9600, 8);
+
 class HunterHelper {
 	public:
 		static void Init();
