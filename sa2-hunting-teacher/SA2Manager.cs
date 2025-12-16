@@ -54,13 +54,11 @@ namespace sa2_hunting_teacher {
 				this.targetProcess.Id
 			);
 
-			if (SA2Manager.MemoryMapper == null) {
-				SA2Manager.MemoryMapper = MemoryMappedFile.CreateOrOpen(
-					"SA2-Hunter-Teacher",
-					Marshal.SizeOf<HunterTeacherData>(),
-					MemoryMappedFileAccess.ReadWrite
-				);
-			}
+			SA2Manager.MemoryMapper ??= MemoryMappedFile.CreateOrOpen(
+				"SA2-Hunter-Teacher",
+				Marshal.SizeOf<HunterTeacherData>(),
+				MemoryMappedFileAccess.ReadWrite
+			);
 
 			this.sharedMemory = SA2Manager.MemoryMapper.CreateViewAccessor();
 			this.ApplyDataDefaults(this.level.LevelId, teacherForm.MspReversedHints());
@@ -149,19 +147,16 @@ namespace sa2_hunting_teacher {
 			string dllPath = Path.Join(Directory.GetCurrentDirectory(), HELPER_DLL_NAME);
 			IntPtr loadLibraryAddr = GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA");
 			IntPtr allocMemAddress = VirtualAllocEx((IntPtr)this.sa2!, IntPtr.Zero, (uint)((dllPath.Length + 1) * Marshal.SizeOf(typeof(char))), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-			
-			UIntPtr bytesWritten;
-			bool success = WriteProcessMemory((IntPtr)this.sa2!, allocMemAddress, Encoding.Default.GetBytes(dllPath), (uint)((dllPath.Length + 1) * Marshal.SizeOf(typeof(char))), out bytesWritten);
+			bool success = WriteProcessMemory((IntPtr)this.sa2!, allocMemAddress, Encoding.Default.GetBytes(dllPath), (uint)((dllPath.Length + 1) * Marshal.SizeOf(typeof(char))), out _);
 			if (!success) {
 				this.HandleMemoryError("Failed to inject helper to SA2 process.");
 				return;
 			}
 
-			uint helperExitCode;
 			IntPtr helperThread = CreateRemoteThread((IntPtr)this.sa2!, IntPtr.Zero, 0, loadLibraryAddr, allocMemAddress, 0, IntPtr.Zero);
 			WaitForSingleObject(helperThread, WAIT_INFINITE);
 
-			if (!GetExitCodeThread(helperThread, out helperExitCode)) {
+			if (!GetExitCodeThread(helperThread, out uint helperExitCode)) {
 				this.HandleMemoryError("Failed to inject helper to SA2 process.");
 			}
 
@@ -175,10 +170,10 @@ namespace sa2_hunting_teacher {
 		}
 
 		public static void Start(Level selection, byte repetitions, HuntingTeacherForm teacherForm) {
-			CanRun = true;
+			SA2Manager.CanRun = true;
 			 
 			using (SA2Manager instance = new(selection, repetitions, teacherForm)) {
-				while (CanRun && !instance.level.SequenceComplete() && !instance.targetProcess.HasExited) {
+				while (SA2Manager.CanRun && !instance.level.SequenceComplete() && !instance.targetProcess.HasExited) {
 					instance.sharedMemory.Read(0, out instance.HunterTeacherData);
 					instance.level.RunSequence();
 					instance.sharedMemory.Write(0, ref instance.HunterTeacherData);
@@ -197,7 +192,7 @@ namespace sa2_hunting_teacher {
 		}
 
 		public static void Stop() {
-			CanRun = false;
+			SA2Manager.CanRun = false;
 		}
 
 		[LibraryImport("kernel32.dll")]
