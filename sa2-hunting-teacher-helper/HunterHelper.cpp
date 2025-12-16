@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "HunterHelper.h"
-#include <string>
 #include <algorithm>
+#include <string>
+#include <vector>
 
 UsercallFuncVoid(hAwardWin, (signed int* player), (player), 0x43E6D0, rESI);
 UsercallFuncVoid(hExitHandler, (int a1, int a2, int a3), (a1, a2, a3), 0x4016D0, rECX, rEBX, rESI);
@@ -51,6 +52,65 @@ void HunterHelper::SetPhysicsAndGiveUpgrades(ObjectMaster* character, int a2) {
 	}
 }
 
+bool HunterHelper::IsShiftJISCharacter(uint8_t leadByte, uint8_t trailByte) {
+	return ((leadByte >= 0x81 && leadByte <= 0x9F) || (leadByte >= 0xE0 && leadByte <= 0xFC))
+		&& ((trailByte >= 0x40 && trailByte <= 0x7E) || (trailByte >= 0x80 && trailByte <= 0xFC));
+}
+
+void HunterHelper::ReverseShiftJISLine(uint8_t* line, size_t len) {
+	struct Token { const uint8_t* ptr; size_t len; };
+	std::vector<Token> tokens;
+	tokens.reserve(len);
+
+	for (size_t i = 0; i < len; i++) {
+		if ((i + 1) < len && HunterHelper::IsShiftJISCharacter(line[i], line[i + 1])) {
+			tokens.push_back({ line + i, 2 });
+			i++;
+		} else {
+			tokens.push_back({ line + i, 1 });
+		}
+	}
+
+	std::vector<uint8_t> temp;
+	temp.reserve(len);
+
+	for (auto it = tokens.rbegin(); it != tokens.rend(); ++it) {
+		temp.insert(temp.end(), it->ptr, it->ptr + it->len);
+	}
+
+	if (temp.size() == len) {
+		std::memcpy(line, temp.data(), len);
+	}
+}
+
+void HunterHelper::ReverseShiftJISHint(uint8_t* hint) {
+	// ensure hint is properly null terminated
+	uint8_t* nul = static_cast<uint8_t*>(std::memchr(hint, 0, HunterHelper::MAX_STR_LEN));
+	if (!nul) {
+		return;
+	}
+
+	size_t hintLen = size_t(nul - hint);
+	size_t pos = 0;
+	while (pos < hintLen) {
+		size_t lineEnd = pos;
+		while (lineEnd < hintLen && hint[lineEnd] != '\n') {
+			++lineEnd;
+		}
+
+		size_t lineLen = lineEnd - pos;
+
+		// handle windows style \r\n new lines.
+		if (lineLen && hint[pos + lineLen - 1] == '\r') {
+			--lineLen;
+		}
+
+		HunterHelper::ReverseShiftJISLine(hint + pos, lineLen);
+
+		pos = (lineEnd < hintLen) ? (lineEnd + 1) : lineEnd;
+	}
+}
+
 void* HunterHelper::EmeraldHintsFileLoaderInterceptor(const void* hintsFileName) {
 	if (CurrentLevel != LevelIDs_MadSpace || HunterHelper::TeacherDataState->mspReversedHints) {
 		return hLoadStageHintsFile.Original(hintsFileName);
@@ -65,16 +125,15 @@ void* HunterHelper::EmeraldHintsFileLoaderInterceptor(const void* hintsFileName)
 			break;
 		}
 
-		char* text = reinterpret_cast<char*>(base + off);
-		size_t len = strnlen(text, MAX_STR_LEN);
-		if (len == MAX_STR_LEN) {
-			continue;
-		}
-
+		char* hint = reinterpret_cast<char*>(base + off);
 		if (i % 3 == 0) {
-			char* start = text + 4;
-			size_t len = std::strlen(start);
-			std::reverse(start, start + len);
+			if (TextLanguage == Language_Japanese) {
+				HunterHelper::ReverseShiftJISHint((uint8_t*)(hint + 4));
+			} else {
+				char* start = hint + 4;
+				size_t len = std::strlen(start);
+				std::reverse(start, start + len);
+			}
 		}
 	}
 
