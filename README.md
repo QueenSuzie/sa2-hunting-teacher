@@ -14,11 +14,17 @@ without any unnecessarily repeated sets.
 
 ### Dependencies
 
+* Sonic Adventure 2 - Steam Version
+  * There are minor differences between the different platform releases but in general learning the pieces on 1 is enough to know them on all
+  * That said, this tool is intended for the Steam version, and requires the steam version of the game to be running alongside on the same machine.
 * Windows
   * Linux running Wine should also work
 * [.NET 8 Desktop Runtime](https://aka.ms/dotnet-core-applaunch?missing_runtime=true&arch=x64&apphost_version=8.0.0&gui=true)
   * Installed in your Wine environment if running Linux
 * Optional but HIGHLY recommended:
+  * [SA Mod Manager](https://github.com/X-Hax/SA-Mod-Manager/releases/latest)
+	* This tool doesn't require the mod loader to be installed, but it's highly recommended you have this anyway for the general fixes the mod loader provides
+	* As well as for the ability to install QoL speedrunning mods and practice mods.
   * [SA2 Story Style Upgrades](https://github.com/QueenSuzie/sa2-story-style-upgrades/releases/latest)
 	* With `Include Current Hunting Level Upgrade` set to ON
 	* Can also be 1-Click installed from [GameBanana](https://gamebanana.com/mods/478254)
