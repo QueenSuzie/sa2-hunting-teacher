@@ -72,7 +72,7 @@ void HunterHelper::ReverseShiftJISHint(uint8_t* hintStart, uint8_t* hintEnd) {
 		// ignore game control bytes
 		if (byte0 == 0x0E || byte0 == 0x0F) {
 			tokens.push_back({ byte0, 0, false });
-		} else if (*c != 0x00 && HunterHelper::IsShiftJISCharacter(byte0, *c)) {
+		} else if (*c != NULL && HunterHelper::IsShiftJISCharacter(byte0, *c)) {
 			uint8_t byte1 = *c++;
 			tokens.push_back({ byte0, byte1, true });
 ;		} else {
@@ -110,22 +110,22 @@ void* HunterHelper::EmeraldHintsFileLoaderInterceptor(const void* hintsFileName)
 			// command options to skip
 			if (*hintTextStart == 0x0C) {
 				hintTextStart++;
-				while (*hintTextStart != 0x00 && *hintTextStart != ' ' && *hintTextStart != ':') {
+				while (*hintTextStart != NULL && *hintTextStart != ' ' && *hintTextStart != ':') {
 					hintTextStart++;
 				}
 
-				if (*hintTextStart != 0x00) {
+				if (*hintTextStart != NULL) {
 					hintTextStart++;
 				}
 			}
 
 			// center command option
-			if (*hintTextStart == 0x07) {
+			if (*hintTextStart == NULL) {
 				hintTextStart++;
 			}
 
 			uint8_t* hintTextEnd = hintTextStart;
-			while (*hintTextEnd != 0x00 && *hintTextEnd != 0x0C) {
+			while (*hintTextEnd != NULL && *hintTextEnd != 0x0C) {
 				hintTextEnd++;
 			}
 
@@ -146,21 +146,21 @@ void HunterHelper::LoadEmeraldLocations(EmeraldManager* emManager) {
 	}
 
 	Life_Count[0] = 99;
-	if (emManager->Piece1.id != 254) {
+	if (emManager->Piece1.id != HunterHelper::PIECE_COLLECTED) {
 		Emerald* p1 = HunterHelper::GetPieceById(emManager, HunterHelper::TeacherDataState->p1Id);
 		*&emManager->Piece1.id = *&p1->id;
 		emManager->Piece1.v = p1->v;
 		emManager->EmeraldsSpawned++;
 	}
 
-	if (emManager->Piece2.id != 254) {
+	if (emManager->Piece2.id != HunterHelper::PIECE_COLLECTED) {
 		Emerald* p2 = HunterHelper::GetPieceById(emManager, HunterHelper::TeacherDataState->p2Id);
 		*&emManager->Piece2.id = *&p2->id;
 		emManager->Piece2.v = p2->v;
 		emManager->EmeraldsSpawned++;
 	}
 
-	if (emManager->Piece3.id != 254) {
+	if (emManager->Piece3.id != HunterHelper::PIECE_COLLECTED) {
 		Emerald* p3 = HunterHelper::GetPieceById(emManager, HunterHelper::TeacherDataState->p3Id);
 		*&emManager->Piece3.id = *&p3->id;
 		emManager->Piece3.v = p3->v;
