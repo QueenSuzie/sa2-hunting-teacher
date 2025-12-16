@@ -1,10 +1,12 @@
 #include "pch.h"
 #include "HunterHelper.h"
 #include <string>
+#include <algorithm>
 
 UsercallFuncVoid(hAwardWin, (signed int* player), (player), 0x43E6D0, rESI);
 UsercallFuncVoid(hExitHandler, (int a1, int a2, int a3), (a1, a2, a3), 0x4016D0, rECX, rEBX, rESI);
 UsercallFuncVoid(hSetPhysicsAndGiveUpgrades, (ObjectMaster* character, int a2), (character, a2), (intptr_t)0x4599C0, rEAX, rECX);
+FunctionHook<void*, const void*> hLoadStageHintsFile((intptr_t)0x73B6C0);
 FunctionHook<void, EmeraldManager*> hLoadEmeraldLocations((intptr_t)EmeraldLocations_1POr2PGroup3);
 FunctionHook<void> hLoadLevel((intptr_t)0x43C970);
 StdcallFunctionHook<LRESULT, HWND, UINT, WPARAM, LPARAM> hWndProc((intptr_t)0x401810);
@@ -17,6 +19,7 @@ void HunterHelper::Init() {
 	hLoadLevel.Hook(HunterHelper::LoadLevel);
 	hAwardWin.Hook(HunterHelper::AwardWin);
 	hSetPhysicsAndGiveUpgrades.Hook(HunterHelper::SetPhysicsAndGiveUpgrades);
+	hLoadStageHintsFile.Hook(HunterHelper::EmeraldHintsFileLoaderInterceptor);
 	hLoadEmeraldLocations.Hook(HunterHelper::LoadEmeraldLocations);
 	hExitHandler.Hook(HunterHelper::ExitHandler);
 	hWndProc.Hook(HunterHelper::WndProc);
@@ -46,6 +49,36 @@ void HunterHelper::SetPhysicsAndGiveUpgrades(ObjectMaster* character, int a2) {
 			MainCharObj2[0]->Upgrades |= Upgrades_RougePickNails;
 		}
 	}
+}
+
+void* HunterHelper::EmeraldHintsFileLoaderInterceptor(const void* hintsFileName) {
+	if (CurrentLevel != LevelIDs_MadSpace || HunterHelper::TeacherDataState->mspReversedHints) {
+		return hLoadStageHintsFile.Original(hintsFileName);
+	}
+
+	void* data = hLoadStageHintsFile.Original(hintsFileName);
+	uint8_t* base = (uint8_t *)data;
+	auto table = reinterpret_cast<uint32_t*>(base);
+	for (size_t i = 0; i < HunterHelper::MAX_HINT_SIZE; ++i) {
+		uint32_t off = table[i];
+		if (off == HunterHelper::FILE_END_BITS) {
+			break;
+		}
+
+		char* text = reinterpret_cast<char*>(base + off);
+		size_t len = strnlen(text, MAX_STR_LEN);
+		if (len == MAX_STR_LEN) {
+			continue;
+		}
+
+		if (i % 3 == 0) {
+			char* start = text + 4;
+			size_t len = std::strlen(start);
+			std::reverse(start, start + len);
+		}
+	}
+
+	return data;
 }
 
 void HunterHelper::LoadEmeraldLocations(EmeraldManager* emManager) {

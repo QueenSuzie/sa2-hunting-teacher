@@ -70,6 +70,7 @@ namespace sa2_hunting_teacher {
 		private void ApplyDataDefaults(LevelId level) {
 			this.HunterTeacherData.currentLevel = (int)level;
 			this.HunterTeacherData.inWinScreen = false;
+			this.HunterTeacherData.mspReversedHints = false;
 			this.HunterTeacherData.p1Id = 0;
 			this.HunterTeacherData.p2Id = 0;
 			this.HunterTeacherData.p3Id = 0;
@@ -255,6 +256,7 @@ namespace sa2_hunting_teacher {
 		public int currentLevel;
 		public bool inWinScreen;
 		public bool levelLoading;
+		public bool mspReversedHints;
 		public int p1Id;
 		public int p2Id;
 		public int p3Id;
