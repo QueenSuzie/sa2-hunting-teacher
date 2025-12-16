@@ -129,7 +129,7 @@ namespace sa2_hunting_teacher
 			levelSelector.DataSource = null;
 			levelSelector.DropDownStyle = ComboBoxStyle.DropDownList;
 			levelSelector.FormattingEnabled = true;
-			levelSelector.Location = new Point(105, 13);
+			levelSelector.Location = new Point(105, 11);
 			levelSelector.Name = "levelSelector";
 			levelSelector.Size = new Size(245, 28);
 			levelSelector.TabIndex = 0;
