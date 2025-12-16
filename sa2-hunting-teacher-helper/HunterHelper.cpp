@@ -72,7 +72,7 @@ void HunterHelper::ReverseShiftJISHint(uint8_t* hintStart, uint8_t* hintEnd) {
 		// ignore game control bytes
 		if (byte0 == 0x0E || byte0 == 0x0F) {
 			tokens.push_back({ byte0, 0, false });
-		} else if (*c != NULL && HunterHelper::IsShiftJISCharacter(byte0, *c)) {
+		} else if (*c != 0x00 && HunterHelper::IsShiftJISCharacter(byte0, *c)) {
 			uint8_t byte1 = *c++;
 			tokens.push_back({ byte0, byte1, true });
 ;		} else {
@@ -110,22 +110,22 @@ void* HunterHelper::EmeraldHintsFileLoaderInterceptor(const void* hintsFileName)
 			// command options to skip
 			if (*hintTextStart == 0x0C) {
 				hintTextStart++;
-				while (*hintTextStart != NULL && *hintTextStart != ' ' && *hintTextStart != ':') {
+				while (*hintTextStart != 0x00 && *hintTextStart != ' ' && *hintTextStart != ':') {
 					hintTextStart++;
 				}
 
-				if (*hintTextStart != NULL) {
+				if (*hintTextStart != 0x00) {
 					hintTextStart++;
 				}
 			}
 
 			// center command option
-			if (*hintTextStart == NULL) {
+			if (*hintTextStart == 0x07) {
 				hintTextStart++;
 			}
 
 			uint8_t* hintTextEnd = hintTextStart;
-			while (*hintTextEnd != NULL && *hintTextEnd != 0x0C) {
+			while (*hintTextEnd != 0x00 && *hintTextEnd != 0x0C) {
 				hintTextEnd++;
 			}
 
