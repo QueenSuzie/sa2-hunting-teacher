@@ -145,8 +145,6 @@ void HunterHelper::LoadEmeraldLocations(EmeraldManager* emManager) {
 		return hLoadEmeraldLocations.Original(emManager);
 	}
 
-	FunctionPointer(int, PrintDebug, (const char* a1, ...), 0x426740);
-	PrintDebug("p1: %d, p2: %d, p3: %d", emManager->Piece1.id, emManager->Piece2.id, emManager->Piece3.id);
 	Life_Count[0] = 99;
 	if (emManager->Piece1.id != 254) {
 		Emerald* p1 = HunterHelper::GetPieceById(emManager, HunterHelper::TeacherDataState->p1Id);
