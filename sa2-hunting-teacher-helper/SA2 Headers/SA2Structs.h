@@ -2,6 +2,10 @@
 
 #include <stdint.h>
 
+#ifndef NDEBUG
+FunctionPointer(int, PrintDebug, (const char* a1, ...), 0x426740);
+#endif
+
 typedef Uint32 NJD_SPRITE;
 typedef Uint32 NJD_FLAG;
 typedef Uint32 NJD_CONTROL_3D;
