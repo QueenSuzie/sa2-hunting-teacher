@@ -145,22 +145,24 @@ void HunterHelper::LoadEmeraldLocations(EmeraldManager* emManager) {
 		return hLoadEmeraldLocations.Original(emManager);
 	}
 
+	FunctionPointer(int, PrintDebug, (const char* a1, ...), 0x426740);
+	PrintDebug("p1: %d, p2: %d, p3: %d", emManager->Piece1.id, emManager->Piece2.id, emManager->Piece3.id);
 	Life_Count[0] = 99;
-	if (emManager->Piece1.id != -2) {
+	if (emManager->Piece1.id != 254) {
 		Emerald* p1 = HunterHelper::GetPieceById(emManager, HunterHelper::TeacherDataState->p1Id);
 		*&emManager->Piece1.id = *&p1->id;
 		emManager->Piece1.v = p1->v;
 		emManager->EmeraldsSpawned++;
 	}
 
-	if (emManager->Piece2.id != -2) {
+	if (emManager->Piece2.id != 254) {
 		Emerald* p2 = HunterHelper::GetPieceById(emManager, HunterHelper::TeacherDataState->p2Id);
 		*&emManager->Piece2.id = *&p2->id;
 		emManager->Piece2.v = p2->v;
 		emManager->EmeraldsSpawned++;
 	}
 
-	if (emManager->Piece3.id != -2) {
+	if (emManager->Piece3.id != 254) {
 		Emerald* p3 = HunterHelper::GetPieceById(emManager, HunterHelper::TeacherDataState->p3Id);
 		*&emManager->Piece3.id = *&p3->id;
 		emManager->Piece3.v = p3->v;
