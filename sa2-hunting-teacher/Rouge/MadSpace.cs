@@ -95,7 +95,7 @@
 			{ Set.EnumKey(P3Id.BunchOfBlackContainersAtBaseStatic), "A bunch of black containers at the base (static)" },
 			{ Set.EnumKey(P3Id.BurningRockSeed), "Burning rock seed" },
 			{ Set.EnumKey(P3Id.BetweenMachinesThreeLegs), "In between the machines with three legs" },
-			{ Set.EnumKey(P3Id.VeryYellowPlatformStatic), "Very yellow platform (static)" },
+			{ Set.EnumKey(P3Id.VeryYellowPlatformStatic), "Very yellow platform (static)" }
 		};
 
 		internal enum EnemyId {
