@@ -118,7 +118,7 @@ namespace sa2_hunting_teacher
 			// label1
 			// 
 			label1.AutoSize = true;
-			label1.Location = new Point(12, 15);
+			label1.Location = new Point(12, 16);
 			label1.Name = "label1";
 			label1.Size = new Size(90, 20);
 			label1.TabIndex = 1;
@@ -129,7 +129,7 @@ namespace sa2_hunting_teacher
 			levelSelector.DataSource = null;
 			levelSelector.DropDownStyle = ComboBoxStyle.DropDownList;
 			levelSelector.FormattingEnabled = true;
-			levelSelector.Location = new Point(105, 12);
+			levelSelector.Location = new Point(105, 13);
 			levelSelector.Name = "levelSelector";
 			levelSelector.Size = new Size(245, 28);
 			levelSelector.TabIndex = 0;
