@@ -31,7 +31,7 @@ namespace sa2_hunting_teacher {
 				Level.EggQuarters => new EggQuarters(this, repetitions),
 				Level.SecurityHall => new SecurityHall(this, repetitions),
 				Level.MadSpace => new MadSpace(this, repetitions),
-				_ => throw new ArgumentException("Unsupported Level Selected!")
+				_ => throw new ArgumentException("Invalid Level Selected!")
 			};
 
 			Process[] processes = Process.GetProcessesByName(SONIC_EXECUTABLE);
