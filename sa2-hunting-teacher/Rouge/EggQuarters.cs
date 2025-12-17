@@ -72,7 +72,7 @@
 			{ Set.EnumKey(P2Id.SleepingUnderCoffin), "Sleeping under a coffin." },
 			{ Set.EnumKey(P2Id.TwoSmeltingFurnaces), "Two smelting furnaces." },
 			{ Set.EnumKey(P2Id.SixWhiteEggs), "Six white eggs." },
-			{ Set.EnumKey(P2Id.UnderTheBelly), "Under the belly." },
+			{ Set.EnumKey(P2Id.UnderTheBellyImpossible), "Under the belly." },
 			{ Set.EnumKey(P2Id.TwoBeautifulWomenWithFishFaces), "Two beautiful women with fish faces." },
 			{ Set.EnumKey(P2Id.UnderTheTreasure), "Under the treasure." },
 			{ Set.EnumKey(P2Id.FlamesFacingEachOther), "Flames facing each other." },
@@ -183,7 +183,7 @@
 			SleepingUnderCoffin = 0x0605,
 			TwoSmeltingFurnaces = 0x0705,
 			SixWhiteEggs = 0x0805,
-			UnderTheBelly = 0x0905,
+			UnderTheBellyImpossible = 0x0905, // Impossible piece
 			TwoBeautifulWomenWithFishFaces = 0x0A05,
 			UnderTheTreasure = 0x0B05,
 			FlamesFacingEachOther = 0x0C05,

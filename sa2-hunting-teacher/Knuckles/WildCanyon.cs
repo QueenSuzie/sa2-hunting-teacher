@@ -3,7 +3,7 @@
 		public override LevelId LevelId => LevelId.WildCanyon;
 
 		protected override Set[] Sequence { get; } = [
-			Set.Create(P1Id.InFrontDoubleContainersLeft, P2Id.UnderTheElbowHead, P3Id.SandyPathToTheHeadOfStoneStatue, WildCanyon.PieceToHint),
+			Set.Create(P1Id.InFrontDoubleContainersLeft, P2Id.BirdBoxUpperImpossible, P3Id.SandyPathToTheHeadOfStoneStatue, WildCanyon.PieceToHint),
 		];
 
 		public override string ToString() => "Wild Canyon";
@@ -64,7 +64,7 @@
 			{ Set.EnumKey(P2Id.InsideStatueStorageArea), "Inside a statue storage area." },
 			{ Set.EnumKey(P2Id.BirdBoxInTheShade), "A bird box in the shade." },
 			{ Set.EnumKey(P2Id.BottomOfAPillar), "At the bottom of a pillar." },
-			{ Set.EnumKey(P2Id.BirdBoxUpper), "A bird box. (upper)" },
+			{ Set.EnumKey(P2Id.BirdBoxUpperImpossible), "A bird box. (upper)" },
 			{ Set.EnumKey(P2Id.UnderTheElbowLonelyImpossible), "Under the elbow. (lonely side)" },
 			{ Set.EnumKey(P2Id.UnderWingsOfTwoBirds), "Under the wings of two birds." },
 			{ Set.EnumKey(P2Id.RedGateChest), "A red gate. (chest)" },
@@ -178,7 +178,7 @@
 			InsideStatueStorageArea = 0x0202,
 			BirdBoxInTheShade = 0x0402,
 			BottomOfAPillar = 0x0502,
-			BirdBoxUpper = 0x0602,
+			BirdBoxUpperImpossible = 0x0602, // Impossible Piece
 			UnderTheElbowLonelyImpossible = 0x0702, // Impossible Piece
 			UnderWingsOfTwoBirds = 0x0005,
 			RedGateChest = 0x0105,
