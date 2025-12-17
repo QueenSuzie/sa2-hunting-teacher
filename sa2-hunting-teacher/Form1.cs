@@ -35,6 +35,17 @@ namespace sa2_hunting_teacher {
 				Text = kvp.Value.LevelText,
 				Group = kvp.Value.Category
 			}).ToList();
+
+			InitSettings();
+		}
+
+		private void InitSettings() {
+			this.mspReverseHints.Checked = Properties.Settings.Default.mspReversedHints;
+		}
+
+		private void SaveSettings() {
+			Properties.Settings.Default.mspReversedHints = this.mspReverseHints.Checked;
+			Properties.Settings.Default.Save();
 		}
 
 		public static void AddLogItem(string value) {
@@ -82,6 +93,10 @@ namespace sa2_hunting_teacher {
 			if (this.levelSelector.SelectedItem != null && ((LevelRow)this.levelSelector.SelectedItem).Level == Level.MadSpace) {
 				mspReverseHints.Visible = true;
 			}
+		}
+
+		private void MspReverseHints_CheckedChanged(object sender, EventArgs e) {
+			this.SaveSettings();
 		}
 	}
 }

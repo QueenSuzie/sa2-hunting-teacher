@@ -70,6 +70,7 @@ namespace sa2_hunting_teacher
 			mspReverseHints.Text = "Reversed Hints";
 			mspReverseHints.UseVisualStyleBackColor = true;
 			mspReverseHints.Visible = false;
+			mspReverseHints.CheckedChanged += MspReverseHints_CheckedChanged;
 			// 
 			// label2
 			// 
