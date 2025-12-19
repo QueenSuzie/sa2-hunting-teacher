@@ -41,7 +41,7 @@ void HunterHelper::AwardWin(signed int* player) {
 
 void HunterHelper::SetPhysicsAndGiveUpgrades(ObjectMaster* character, int a2) {
 	hSetPhysicsAndGiveUpgrades.Original(character, a2);
-	if (CurrentLevel != HunterHelper::TeacherDataState->currentLevel) {
+	if (CurrentLevel == HunterHelper::TeacherDataState->currentLevel) {
 		if (CurrentLevel == LevelIDs_PumpkinHill) {
 			MainCharObj2[0]->Upgrades |= Upgrades_KnucklesShovelClaw;
 		}
