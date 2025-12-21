@@ -10,9 +10,9 @@ UsercallFuncVoid(hSetPhysicsAndGiveUpgrades, (ObjectMaster* character, int a2), 
 FunctionHook<void*, const void*> hLoadStageHintsFile((intptr_t)0x73B6C0);
 FunctionHook<void, EmeraldManager*> hLoadEmeraldLocations((intptr_t)0x7380A0);
 FunctionHook<void> hLoadLevel((intptr_t)0x43C970);
-StdcallFunctionHook<LRESULT, HWND, UINT, WPARAM, LPARAM> hWndProc((intptr_t)0x401810);
 
 void HunterHelper::Init() {
+	HunterHelper::HookActiveWindow();
 	if (!HunterHelper::TeacherDataState) {
 		HunterHelper::OpenSharedMemory();
 	}
@@ -23,7 +23,45 @@ void HunterHelper::Init() {
 	hLoadStageHintsFile.Hook(HunterHelper::EmeraldHintsFileLoaderInterceptor);
 	hLoadEmeraldLocations.Hook(HunterHelper::LoadEmeraldLocations);
 	hExitHandler.Hook(HunterHelper::ExitHandler);
-	hWndProc.Hook(HunterHelper::WndProc);
+}
+
+void HunterHelper::HookActiveWindow() {
+	FindActiveWindow param{ GetCurrentProcessId(), NULL };
+	EnumWindows(HunterHelper::EnumWindowsProc, (LPARAM)&param);
+
+	if (!param.hwnd || true) {
+		MessageBox(NULL, L"Failed to hook active process!", L"Error!", MB_OK | MB_ICONERROR);
+		exit(1);
+	}
+
+	HunterHelper::OldWndProc = (WNDPROC)SetWindowLong(param.hwnd, GWLP_WNDPROC, (LONG_PTR)HunterHelper::WndProc);
+	std::wstring t = L"Wind Proc: " + std::to_wstring((int)HunterHelper::OldWndProc);
+}
+
+BOOL CALLBACK HunterHelper::EnumWindowsProc(HWND hwnd, LPARAM lParam) {
+	auto* data = (FindActiveWindow*)lParam;
+
+	DWORD pid = 0;
+	GetWindowThreadProcessId(hwnd, &pid);
+	if (pid != data->pid) {
+		return TRUE;
+	}
+
+	if (!IsWindowVisible(hwnd)) {
+		return TRUE;
+	}
+
+	if (GetWindow(hwnd, GW_OWNER) != NULL) {
+		return TRUE;
+	}
+
+	LONG exStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
+	if (exStyle & WS_EX_TOOLWINDOW) {
+		return TRUE;
+	}
+
+	data->hwnd = hwnd;
+	return FALSE;
 }
 
 void HunterHelper::LoadLevel() {
@@ -238,9 +276,9 @@ void HunterHelper::ExitHandler(int a1, int a2, int a3) {
 }
 
 LRESULT __stdcall HunterHelper::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	if (uMsg == WM_CLOSE) {
+	if (uMsg == WM_QUIT || (uMsg == WM_SYSCOMMAND && (wParam & 0xFFF0) == SC_CLOSE)) {
 		HunterHelper::CleanUp();
 	}
 
-	return hWndProc.Original(hWnd, uMsg, wParam, lParam);
+	return CallWindowProc(HunterHelper::OldWndProc, hWnd, uMsg, wParam, lParam);
 }

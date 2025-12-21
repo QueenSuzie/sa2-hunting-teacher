@@ -10,6 +10,11 @@ struct HunterTeacherData {
 	int p2Id;
 	int p3Id;
 };
+
+struct FindActiveWindow {
+	DWORD pid;
+	HWND hwnd;
+};
 #pragma pack(pop)
 
 DataPointer(__int16, CurrentLevel, 0x1934B70);
@@ -27,12 +32,14 @@ class HunterHelper {
 		static void LoadEmeraldLocations(EmeraldManager* emManager);
 		static void ExitHandler(int a1, int a2, int a3);
 		static LRESULT __stdcall WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		static BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam);
 		static void CleanUp();
 
 		static inline HANDLE hMap = nullptr;
 		static inline HunterTeacherData* TeacherDataState = nullptr;
 
 	private:
+		static void HookActiveWindow();
 		static void OpenSharedMemory();
 		static Emerald* GetPieceById(EmeraldManager* emManager, int id);
 		static bool IsShiftJISCharacter(uint8_t leadByte, uint8_t trailByte);
@@ -41,5 +48,6 @@ class HunterHelper {
 		static inline const int MAX_HINT_SIZE = 8192;
 		static inline const int MAX_STR_LEN = 4096;
 		static inline const uint32_t FILE_END_BITS = 0xFFFFFFFFu;
+		static inline WNDPROC OldWndProc = nullptr;
 };
 
