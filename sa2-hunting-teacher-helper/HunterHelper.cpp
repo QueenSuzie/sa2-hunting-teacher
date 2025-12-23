@@ -178,34 +178,6 @@ void* HunterHelper::EmeraldHintsFileLoaderInterceptor(const void* hintsFileName)
 	return data;
 }
 
-void HunterHelper::LoadEmeraldLocations(EmeraldManager* emManager) {
-	if (CurrentLevel != HunterHelper::TeacherDataState->currentLevel) {
-		return hLoadEmeraldLocations.Original(emManager);
-	}
-
-	Life_Count[0] = 99;
-	if (emManager->Piece1.id != HunterHelper::PIECE_COLLECTED) {
-		Emerald* p1 = HunterHelper::GetPieceById(emManager, HunterHelper::TeacherDataState->p1Id);
-		*&emManager->Piece1.id = *&p1->id;
-		emManager->Piece1.v = p1->v;
-		emManager->EmeraldsSpawned++;
-	}
-
-	if (emManager->Piece2.id != HunterHelper::PIECE_COLLECTED) {
-		Emerald* p2 = HunterHelper::GetPieceById(emManager, HunterHelper::TeacherDataState->p2Id);
-		*&emManager->Piece2.id = *&p2->id;
-		emManager->Piece2.v = p2->v;
-		emManager->EmeraldsSpawned++;
-	}
-
-	if (emManager->Piece3.id != HunterHelper::PIECE_COLLECTED) {
-		Emerald* p3 = HunterHelper::GetPieceById(emManager, HunterHelper::TeacherDataState->p3Id);
-		*&emManager->Piece3.id = *&p3->id;
-		emManager->Piece3.v = p3->v;
-		emManager->EmeraldsSpawned++;
-	}
-}
-
 Emerald* HunterHelper::GetPieceById(EmeraldManager* emManager, int id) {
 	byte idLowByte = id & 0xFF;
 	Emerald* emeralds = nullptr;
@@ -244,6 +216,34 @@ Emerald* HunterHelper::GetPieceById(EmeraldManager* emManager, int id) {
 	exit(1);
 
 	return nullptr;
+}
+
+void HunterHelper::LoadEmeraldLocations(EmeraldManager* emManager) {
+	if (CurrentLevel != HunterHelper::TeacherDataState->currentLevel) {
+		return hLoadEmeraldLocations.Original(emManager);
+	}
+
+	Life_Count[0] = 99;
+	if (emManager->Piece1.id != HunterHelper::PIECE_COLLECTED) {
+		Emerald* p1 = HunterHelper::GetPieceById(emManager, HunterHelper::TeacherDataState->p1Id);
+		*&emManager->Piece1.id = *&p1->id;
+		emManager->Piece1.v = p1->v;
+		emManager->EmeraldsSpawned++;
+	}
+
+	if (emManager->Piece2.id != HunterHelper::PIECE_COLLECTED) {
+		Emerald* p2 = HunterHelper::GetPieceById(emManager, HunterHelper::TeacherDataState->p2Id);
+		*&emManager->Piece2.id = *&p2->id;
+		emManager->Piece2.v = p2->v;
+		emManager->EmeraldsSpawned++;
+	}
+
+	if (emManager->Piece3.id != HunterHelper::PIECE_COLLECTED) {
+		Emerald* p3 = HunterHelper::GetPieceById(emManager, HunterHelper::TeacherDataState->p3Id);
+		*&emManager->Piece3.id = *&p3->id;
+		emManager->Piece3.v = p3->v;
+		emManager->EmeraldsSpawned++;
+	}
 }
 
 void HunterHelper::OpenSharedMemory() {
