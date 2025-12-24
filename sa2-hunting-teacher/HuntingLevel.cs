@@ -27,11 +27,18 @@
 		}
 
 		public void RunSequence() {
-			this.Manager.ApplySet(this.Sequence[Next], this.Next + 1, this.Sequence.Length, (int) Math.Ceiling((double)(this.SequenceCount + 1) / (double)this.Sequence.Length));
+			if (this.Manager.IsInWinScreen() || this.Manager.IsLevelLoading()) {
+				if (this.Manager.IsInWinScreen()) {
+					this.Next = this.NextSequence();
+					this.SequenceCount++;
+				}
 
-			if (this.Manager.IsInWinScreen()) {
-				this.Next = this.NextSequence();
-				this.SequenceCount++;
+				this.Manager.ApplySet(
+					this.Sequence[Next],
+					this.Next + 1,
+					this.Sequence.Length,
+					(int)Math.Ceiling((double)(this.SequenceCount + 1) / (double)this.Sequence.Length)
+				);
 			}
 		}
 

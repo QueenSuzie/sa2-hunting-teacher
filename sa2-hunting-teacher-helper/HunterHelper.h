@@ -6,6 +6,7 @@ struct HunterTeacherData {
 	bool inWinScreen;
 	bool levelLoading;
 	bool mspReversedHints;
+	bool backToMenu;
 	int p1Id;
 	int p2Id;
 	int p3Id;
@@ -21,6 +22,16 @@ DataPointer(__int16, CurrentLevel, 0x1934B70);
 DataPointer(char, CurrentLanguage, 0x174AFD1);
 DataArray(__int16, Life_Count, 0x174B024, 2);
 DataArray(CharObj2Base*, MainCharObj2, 0x1DE9600, 8);
+DataPointer(EmeraldManager*, EmeraldManagerObj, 0x1AF014C);
+DataPointer(__int16, GameState, 0x1934BE0);
+
+static const void* const KillPlayerPtr = (void*)0x46B110;
+static inline void KillPlayer(int playerNum) {
+	__asm {
+		mov ebx, [playerNum]
+		call KillPlayerPtr
+	}
+}
 
 class HunterHelper {
 	public:

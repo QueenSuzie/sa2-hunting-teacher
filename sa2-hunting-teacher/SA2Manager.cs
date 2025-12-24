@@ -61,14 +61,15 @@ namespace sa2_hunting_teacher {
 			);
 
 			this.sharedMemory = SA2Manager.MemoryMapper.CreateViewAccessor();
-			this.ApplyDataDefaults(this.level.LevelId, teacherForm.MspReversedHints());
+			this.ApplyDataDefaults(this.level.LevelId, teacherForm.MspReversedHints(), teacherForm.BackToMenu());
 			this.InjectDll();
 		}
 
-		private void ApplyDataDefaults(LevelId level, bool mspReversedHints) {
+		private void ApplyDataDefaults(LevelId level, bool mspReversedHints, bool backToMenu) {
 			this.HunterTeacherData.currentLevel = (int)level;
 			this.HunterTeacherData.inWinScreen = false;
 			this.HunterTeacherData.mspReversedHints = mspReversedHints;
+			this.HunterTeacherData.backToMenu = backToMenu;
 			this.HunterTeacherData.p1Id = 0;
 			this.HunterTeacherData.p2Id = 0;
 			this.HunterTeacherData.p3Id = 0;
@@ -76,10 +77,7 @@ namespace sa2_hunting_teacher {
 		}
 
 		public void ApplySet(Set set, int seqCount, int seqTotal, int currentRep) {
-			if (!this.HunterTeacherData.levelLoading) {
-				return;
-			}
-
+			this.HunterTeacherData.inWinScreen = false;
 			this.HunterTeacherData.p1Id = set.P1Id;
 			this.HunterTeacherData.p2Id = set.P2Id;
 			this.HunterTeacherData.p3Id = set.P3Id;
@@ -87,12 +85,12 @@ namespace sa2_hunting_teacher {
 			this.LogMessage($"Writing Set ({seqCount} / {seqTotal}) For Rep ({currentRep}): " + set);
 		}
 
+		public bool IsLevelLoading() {
+			return this.HunterTeacherData.levelLoading;
+		}
+
 		public bool IsInWinScreen() {
 			if (this.HunterTeacherData.inWinScreen) {
-				this.HunterTeacherData.inWinScreen = false;
-				this.HunterTeacherData.p1Id = 0;
-				this.HunterTeacherData.p2Id = 0;
-				this.HunterTeacherData.p3Id = 0;
 				return true;
 			}
 
@@ -255,6 +253,7 @@ namespace sa2_hunting_teacher {
 		public bool inWinScreen;
 		public bool levelLoading;
 		public bool mspReversedHints;
+		public bool backToMenu;
 		public int p1Id;
 		public int p2Id;
 		public int p3Id;

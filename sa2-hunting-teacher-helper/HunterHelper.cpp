@@ -1,7 +1,9 @@
 #include "pch.h"
 #include "HunterHelper.h"
 #include <algorithm>
+#include <chrono>
 #include <string>
+#include <thread>
 #include <vector>
 
 UsercallFuncVoid(hAwardWin, (signed int* player), (player), 0x43E6D0, rESI);
@@ -73,8 +75,18 @@ void HunterHelper::LoadLevel() {
 }
 
 void HunterHelper::AwardWin(signed int* player) {
+	if (HunterHelper::TeacherDataState->currentLevel != CurrentLevel) {
+		hAwardWin.Original(player);
+		return;
+	}
+
 	HunterHelper::TeacherDataState->inWinScreen = true;
-	hAwardWin.Original(player);
+	EmeraldManagerObj->Action = 4;
+	EmeraldManagerObj->EmeraldsSpawned = 0;
+	EmeraldManagerObj->Piece1.id = 0xFF;
+	EmeraldManagerObj->Piece2.id = 0xFF;
+	EmeraldManagerObj->Piece3.id = 0xFF;
+	GameState = HunterHelper::TeacherDataState->backToMenu ? GameStates_ReturnToMenu_1 : GameStates_RestartLevel_NoLifeLost;
 }
 
 void HunterHelper::SetPhysicsAndGiveUpgrades(ObjectMaster* character, int a2) {
@@ -212,6 +224,7 @@ Emerald* HunterHelper::GetPieceById(EmeraldManager* emManager, int id) {
 		}
 	}
 
+	PrintDebug("id sent: %d - emm1: %d - emmstatus: %d - emmaction: %d", id, emManager->Piece1.id, emManager->Status, emManager->Action);
 	MessageBox(NULL, L"Invalid ID Detected! Please report this along with the level and set that was last loaded.", L"Error!", MB_OK | MB_ICONERROR);
 	exit(1);
 
@@ -221,6 +234,11 @@ Emerald* HunterHelper::GetPieceById(EmeraldManager* emManager, int id) {
 void HunterHelper::LoadEmeraldLocations(EmeraldManager* emManager) {
 	if (CurrentLevel != HunterHelper::TeacherDataState->currentLevel) {
 		return hLoadEmeraldLocations.Original(emManager);
+	}
+
+	// if resetting pieces, wait for teacher to send new ones
+	while (HunterHelper::TeacherDataState->inWinScreen) {
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	}
 
 	Life_Count[0] = 99;

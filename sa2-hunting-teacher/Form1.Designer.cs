@@ -29,8 +29,11 @@ namespace sa2_hunting_teacher
 		///  the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent() {
+			components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HuntingTeacherForm));
 			panel1 = new Panel();
+			label3 = new Label();
+			backToMenu = new CheckBox();
 			mspReverseHints = new CheckBox();
 			label2 = new Label();
 			repetitions = new NumericUpDown();
@@ -40,6 +43,8 @@ namespace sa2_hunting_teacher
 			levelSelector = new GroupedComboBox();
 			panel2 = new Panel();
 			logBox = new TextBox();
+			reversedHintsTooltip = new ToolTip(components);
+			backToMenuTooltip = new ToolTip(components);
 			panel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)repetitions).BeginInit();
 			panel2.SuspendLayout();
@@ -47,6 +52,8 @@ namespace sa2_hunting_teacher
 			// 
 			// panel1
 			// 
+			panel1.Controls.Add(label3);
+			panel1.Controls.Add(backToMenu);
 			panel1.Controls.Add(mspReverseHints);
 			panel1.Controls.Add(label2);
 			panel1.Controls.Add(repetitions);
@@ -57,26 +64,45 @@ namespace sa2_hunting_teacher
 			panel1.Dock = DockStyle.Top;
 			panel1.Location = new Point(0, 0);
 			panel1.Name = "panel1";
-			panel1.Size = new Size(862, 53);
+			panel1.Size = new Size(827, 80);
 			panel1.TabIndex = 0;
+			// 
+			// label3
+			// 
+			label3.AutoSize = true;
+			label3.Location = new Point(12, 51);
+			label3.Name = "label3";
+			label3.Size = new Size(65, 20);
+			label3.TabIndex = 8;
+			label3.Text = "Settings:";
+			// 
+			// backToMenu
+			// 
+			backToMenu.AutoSize = true;
+			backToMenu.Location = new Point(249, 50);
+			backToMenu.Name = "backToMenu";
+			backToMenu.Size = new Size(123, 24);
+			backToMenu.TabIndex = 7;
+			backToMenu.Text = "Back To Menu";
+			backToMenu.UseVisualStyleBackColor = true;
+			backToMenu.CheckedChanged += Settings_CheckedChanged;
 			// 
 			// mspReverseHints
 			// 
 			mspReverseHints.AutoSize = true;
-			mspReverseHints.Location = new Point(356, 15);
+			mspReverseHints.Location = new Point(105, 50);
 			mspReverseHints.Name = "mspReverseHints";
 			mspReverseHints.Size = new Size(129, 24);
 			mspReverseHints.TabIndex = 6;
 			mspReverseHints.Text = "Reversed Hints";
 			mspReverseHints.UseVisualStyleBackColor = true;
-			mspReverseHints.Visible = false;
-			mspReverseHints.CheckedChanged += MspReverseHints_CheckedChanged;
+			mspReverseHints.CheckedChanged += Settings_CheckedChanged;
 			// 
 			// label2
 			// 
 			label2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
 			label2.AutoSize = true;
-			label2.Location = new Point(512, 16);
+			label2.Location = new Point(477, 17);
 			label2.Name = "label2";
 			label2.Size = new Size(87, 20);
 			label2.TabIndex = 5;
@@ -85,7 +111,7 @@ namespace sa2_hunting_teacher
 			// repetitions
 			// 
 			repetitions.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-			repetitions.Location = new Point(607, 14);
+			repetitions.Location = new Point(572, 15);
 			repetitions.Maximum = new decimal(new int[] { 9, 0, 0, 0 });
 			repetitions.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
 			repetitions.Name = "repetitions";
@@ -97,7 +123,7 @@ namespace sa2_hunting_teacher
 			// 
 			resetBtn.Anchor = AnchorStyles.Top | AnchorStyles.Right;
 			resetBtn.Enabled = false;
-			resetBtn.Location = new Point(656, 12);
+			resetBtn.Location = new Point(621, 13);
 			resetBtn.Name = "resetBtn";
 			resetBtn.Size = new Size(94, 29);
 			resetBtn.TabIndex = 3;
@@ -108,7 +134,7 @@ namespace sa2_hunting_teacher
 			// startBtn
 			// 
 			startBtn.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-			startBtn.Location = new Point(756, 11);
+			startBtn.Location = new Point(721, 12);
 			startBtn.Name = "startBtn";
 			startBtn.Size = new Size(94, 29);
 			startBtn.TabIndex = 2;
@@ -140,9 +166,9 @@ namespace sa2_hunting_teacher
 			// 
 			panel2.Controls.Add(logBox);
 			panel2.Dock = DockStyle.Fill;
-			panel2.Location = new Point(0, 53);
+			panel2.Location = new Point(0, 80);
 			panel2.Name = "panel2";
-			panel2.Size = new Size(862, 412);
+			panel2.Size = new Size(827, 385);
 			panel2.TabIndex = 1;
 			// 
 			// logBox
@@ -153,7 +179,7 @@ namespace sa2_hunting_teacher
 			logBox.Name = "logBox";
 			logBox.ReadOnly = true;
 			logBox.ScrollBars = ScrollBars.Vertical;
-			logBox.Size = new Size(862, 412);
+			logBox.Size = new Size(827, 385);
 			logBox.TabIndex = 0;
 			logBox.WordWrap = false;
 			// 
@@ -161,11 +187,11 @@ namespace sa2_hunting_teacher
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
 			AutoScaleMode = AutoScaleMode.Font;
-			ClientSize = new Size(862, 465);
+			ClientSize = new Size(827, 465);
 			Controls.Add(panel2);
 			Controls.Add(panel1);
 			Icon = (Icon)resources.GetObject("$this.Icon");
-			MinimumSize = new Size(845, 384);
+			MinimumSize = new Size(775, 384);
 			Name = "HuntingTeacherForm";
 			Text = "Hunting Teacher";
 			panel1.ResumeLayout(false);
@@ -188,5 +214,9 @@ namespace sa2_hunting_teacher
 		private Label label2;
 		private CheckBox mspReverseHints;
 		private GroupedComboBox levelSelector;
+		private Label label3;
+		private CheckBox backToMenu;
+		private ToolTip reversedHintsTooltip;
+		private ToolTip backToMenuTooltip;
 	}
 }

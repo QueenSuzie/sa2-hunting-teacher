@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace sa2_hunting_teacher {
 	internal class Settings {
@@ -10,6 +9,7 @@ namespace sa2_hunting_teacher {
 		/// Defaults to <c>false</c>.
 		/// </summary>
 		public bool MspReversedHints { get; set; } = false;
+		public bool BackToMenu { get; set; } = false;
 
 		public static readonly string AppDataPath = Path.Combine(
 			System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData),

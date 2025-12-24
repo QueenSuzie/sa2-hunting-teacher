@@ -1,7 +1,7 @@
 namespace sa2_hunting_teacher {
 	public partial class HuntingTeacherForm : Form {
-		private static TextBox? currentLogBox;
-		private Settings settings;
+		private static TextBox? CurrentLogBox;
+		private readonly Settings settings;
 
 		public sealed class LevelRow {
 			public Level Level { get; init; } = default;
@@ -26,39 +26,60 @@ namespace sa2_hunting_teacher {
 		public HuntingTeacherForm() {
 			InitializeComponent();
 
-			currentLogBox = logBox;
-			levelSelector.DisplayMember = nameof(LevelRow.Text);
-			levelSelector.ValueMember = nameof(LevelRow.Level);
-			levelSelector.GroupMember = nameof(LevelRow.Group);
-			levelSelector.SelectedValue = Level.WildCanyon;
-			levelSelector.DataSource = SupportedLevels.Select(kvp => new LevelRow {
+			HuntingTeacherForm.CurrentLogBox = this.logBox;
+			this.levelSelector.DisplayMember = nameof(LevelRow.Text);
+			this.levelSelector.ValueMember = nameof(LevelRow.Level);
+			this.levelSelector.GroupMember = nameof(LevelRow.Group);
+			this.levelSelector.SelectedValue = Level.WildCanyon;
+			this.levelSelector.DataSource = HuntingTeacherForm.SupportedLevels.Select(kvp => new LevelRow {
 				Level = kvp.Key,
 				Text = kvp.Value.LevelText,
 				Group = kvp.Value.Category
 			}).ToList();
 
+			this.settings = Settings.Load();
 			InitializeSettings();
+			InitializeTooltips();
 		}
 
 		private void InitializeSettings() {
-			this.settings = Settings.Load();
 			this.mspReverseHints.Checked = this.settings.MspReversedHints;
+			this.backToMenu.Checked = this.settings.BackToMenu;
+		}
+
+		private void InitializeTooltips() {
+			this.reversedHintsTooltip.SetToolTip(
+				this.mspReverseHints,
+				"When enabled, hints in Mad Space will show up reversed (vanilla game behavior)\n" +
+				"When disabled, hints in Mad Space will show up human-readable (modded game behavior)"
+			);
+
+			this.backToMenuTooltip.SetToolTip(
+				this.backToMenu,
+				"When enabled, you will go back to stage select after collecting your last piece\n" +
+				"When disabled, you will instantly respawn to your next set without having to go back to stage select"
+			);
 		}
 
 		private void SaveSettings() {
 			this.settings.MspReversedHints = this.mspReverseHints.Checked;
+			this.settings.BackToMenu = this.backToMenu.Checked;
 			this.settings.Save();
 		}
 
 		public static void AddLogItem(string value) {
-			if (currentLogBox == null) {
+			if (CurrentLogBox == null) {
 				return;
 			}
 
-			currentLogBox.AppendText(value + Environment.NewLine);
+			CurrentLogBox.AppendText(value + Environment.NewLine);
 		}
 		public bool MspReversedHints() {
 			return mspReverseHints.Checked;
+		}
+
+		public bool BackToMenu() {
+			return backToMenu.Checked;
 		}
 
 		private void StartBtn_Click(object sender, EventArgs e) {
@@ -86,18 +107,19 @@ namespace sa2_hunting_teacher {
 			SA2Manager.Stop();
 			resetBtn.Enabled = false;
 			repetitions.Enabled = true;
-			mspReverseHints.Enabled = true;
+			mspReverseHints.Enabled = this.ShouldEnableMspReverseHints();
 			startBtn.Enabled = true;
 		}
 
-		private void LevelSelector_SelectedIndexChanged(object sender, EventArgs e) {
-			mspReverseHints.Visible = false;
-			if (this.levelSelector.SelectedItem != null && ((LevelRow)this.levelSelector.SelectedItem).Level == Level.MadSpace) {
-				mspReverseHints.Visible = true;
-			}
+		private bool ShouldEnableMspReverseHints() {
+			return this.levelSelector.SelectedItem != null && ((LevelRow)this.levelSelector.SelectedItem).Level == Level.MadSpace;
 		}
 
-		private void MspReverseHints_CheckedChanged(object sender, EventArgs e) {
+		private void LevelSelector_SelectedIndexChanged(object sender, EventArgs e) {
+			mspReverseHints.Enabled = this.ShouldEnableMspReverseHints();
+		}
+
+		private void Settings_CheckedChanged(object sender, EventArgs e) {
 			this.SaveSettings();
 		}
 	}
