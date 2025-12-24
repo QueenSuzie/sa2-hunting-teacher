@@ -224,7 +224,6 @@ Emerald* HunterHelper::GetPieceById(EmeraldManager* emManager, int id) {
 		}
 	}
 
-	PrintDebug("id sent: %d - emm1: %d - emmstatus: %d - emmaction: %d", id, emManager->Piece1.id, emManager->Status, emManager->Action);
 	MessageBox(NULL, L"Invalid ID Detected! Please report this along with the level and set that was last loaded.", L"Error!", MB_OK | MB_ICONERROR);
 	exit(1);
 
