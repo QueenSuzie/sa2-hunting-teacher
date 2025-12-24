@@ -25,14 +25,6 @@ DataArray(CharObj2Base*, MainCharObj2, 0x1DE9600, 8);
 DataPointer(EmeraldManager*, EmeraldManagerObj, 0x1AF014C);
 DataPointer(__int16, GameState, 0x1934BE0);
 
-static const void* const KillPlayerPtr = (void*)0x46B110;
-static inline void KillPlayer(int playerNum) {
-	__asm {
-		mov ebx, [playerNum]
-		call KillPlayerPtr
-	}
-}
-
 class HunterHelper {
 	public:
 		static void Init();
