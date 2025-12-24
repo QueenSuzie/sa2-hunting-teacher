@@ -3,7 +3,6 @@
 		public override LevelId LevelId => LevelId.PumpkinHill;
 
 		protected override Set[] Sequence { get; } = [
-			Set.Create(P3Id.WanderAroundInACircle, P3Id.WanderAroundInACircleDots, P3Id.StuffedNose, PumpkinHill.PieceToHint)
 		];
 
 		public override string ToString() => "Pumpkin Hill";
