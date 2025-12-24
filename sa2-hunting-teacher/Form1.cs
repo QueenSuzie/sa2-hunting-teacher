@@ -1,6 +1,7 @@
 namespace sa2_hunting_teacher {
 	public partial class HuntingTeacherForm : Form {
 		private static TextBox? currentLogBox;
+		private Settings settings;
 
 		public sealed class LevelRow {
 			public Level Level { get; init; } = default;
@@ -36,16 +37,17 @@ namespace sa2_hunting_teacher {
 				Group = kvp.Value.Category
 			}).ToList();
 
-			InitSettings();
+			InitializeSettings();
 		}
 
-		private void InitSettings() {
-			this.mspReverseHints.Checked = Properties.Settings.Default.mspReversedHints;
+		private void InitializeSettings() {
+			this.settings = Settings.Load();
+			this.mspReverseHints.Checked = this.settings.MspReversedHints;
 		}
 
 		private void SaveSettings() {
-			Properties.Settings.Default.mspReversedHints = this.mspReverseHints.Checked;
-			Properties.Settings.Default.Save();
+			this.settings.MspReversedHints = this.mspReverseHints.Checked;
+			this.settings.Save();
 		}
 
 		public static void AddLogItem(string value) {
