@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.IO;
+using System.Text.Json;
 
 namespace sa2_hunting_teacher {
 	internal class Settings {
@@ -11,7 +12,7 @@ namespace sa2_hunting_teacher {
 		public bool MspReversedHints { get; set; } = false;
 
 		public static readonly string AppDataPath = Path.Combine(
-			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+			System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData),
 			"SA2 Hunting Teacher"
 		);
 
@@ -27,7 +28,7 @@ namespace sa2_hunting_teacher {
 			WriteIndented = true
 		};
 
-		[Obsolete("Do not use this constructor directly. Use Settings.Load() instead.", false)]
+		[System.Obsolete("Do not use this constructor directly. Use Settings.Load() instead.", false)]
 		public Settings() { }
 
 		public static Settings Load() {
