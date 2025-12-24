@@ -179,6 +179,9 @@ namespace sa2_hunting_teacher {
 					instance.sharedMemory.Write(0, ref instance.HunterTeacherData);
 				}
 
+				instance.HunterTeacherData.currentLevel = 0;
+				instance.sharedMemory.Write(0, ref instance.HunterTeacherData);
+
 				instance.LogMessage("Sequence Complete!" + Environment.NewLine);
 
 				if (instance.targetProcess.HasExited) {

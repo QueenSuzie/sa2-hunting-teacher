@@ -54,21 +54,21 @@
   <PropertyGroup>
     <HelperProject>..\sa2-hunting-teacher-helper\sa2-hunting-teacher-helper.vcxproj</HelperProject>
     <HelperPlatform>x86</HelperPlatform>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
   
   <Target Name="BuildHelper" BeforeTargets="Publish">
     <Message Text="Building helper: $(HelperProject) ($(Configuration)|$(HelperPlatform))" Importance="high" />
 
-    <MSBuild Projects="$(HelperProject)"
-             Targets="Build"
-             Properties="Configuration=$(Configuration);Platform=$(HelperPlatform)" />
+    <MSBuild Projects="$(HelperProject)" Targets="Build" Properties="Configuration=$(Configuration);Platform=$(HelperPlatform)" />
   </Target>
   
   <Target Name="CopyHelperToPublish" AfterTargets="Publish">
     <ItemGroup>
       <HelperDll Include="..\bin\Release\hunting-teacher.helper.dll" />
     </ItemGroup>
-    <Message Text="Copying native DLL to publish dir: @( _NativeDll ) -> $(PublishDir)" Importance="high" />
+    <Message Text="Copying native DLL to publish dir: @( _NativeDll ) -&gt; $(PublishDir)" Importance="high" />
     <Copy SourceFiles="@(HelperDll)" DestinationFolder="$(PublishDir)" SkipUnchangedFiles="true" />
   </Target>
 
