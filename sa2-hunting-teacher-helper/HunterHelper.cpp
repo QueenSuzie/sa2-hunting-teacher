@@ -29,7 +29,7 @@ void HunterHelper::HookActiveWindow() {
 	FindActiveWindow param{ GetCurrentProcessId(), NULL };
 	EnumWindows(HunterHelper::EnumWindowsProc, (LPARAM)&param);
 
-	if (!param.hwnd || true) {
+	if (!param.hwnd) {
 		MessageBox(NULL, L"Failed to hook active process!", L"Error!", MB_OK | MB_ICONERROR);
 		exit(1);
 	}

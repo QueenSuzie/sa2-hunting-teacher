@@ -23,6 +23,7 @@
 	<OutputPath>$(BaseOutputPath)$(Configuration)\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <Version>1.0.0-alpha.1</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
@@ -64,5 +65,26 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
+  
+  <PropertyGroup>
+    <HelperProject>..\sa2-hunting-teacher-helper\sa2-hunting-teacher-helper.vcxproj</HelperProject>
+    <HelperPlatform>x86</HelperPlatform>
+  </PropertyGroup>
+  
+  <Target Name="BuildHelper" BeforeTargets="Publish">
+    <Message Text="Building helper: $(HelperProject) ($(Configuration)|$(HelperPlatform))" Importance="high" />
+
+    <MSBuild Projects="$(HelperProject)"
+             Targets="Build"
+             Properties="Configuration=$(Configuration);Platform=$(HelperPlatform)" />
+  </Target>
+  
+  <Target Name="CopyHelperToPublish" AfterTargets="Publish">
+    <ItemGroup>
+      <HelperDll Include="..\bin\Release\hunting-teacher.helper.dll" />
+    </ItemGroup>
+    <Message Text="Copying native DLL to publish dir: @( _NativeDll ) -> $(PublishDir)" Importance="high" />
+    <Copy SourceFiles="@(HelperDll)" DestinationFolder="$(PublishDir)" SkipUnchangedFiles="true" />
+  </Target>
 
 </Project>
