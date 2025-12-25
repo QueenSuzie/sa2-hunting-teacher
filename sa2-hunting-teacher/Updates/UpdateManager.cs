@@ -166,7 +166,7 @@ namespace sa2_hunting_teacher.Updates {
 				updateForm.Invoke(() => {
 					MessageBox.Show(
 						updateForm,
-						"There was an error while trying to read the contents of the update.\n" +
+						"There was an error while trying to read the update contents.\n" +
 							"Please try again later.", "Download Error",
 						MessageBoxButtons.OK,
 						MessageBoxIcon.Error
