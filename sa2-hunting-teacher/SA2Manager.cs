@@ -68,6 +68,7 @@ namespace sa2_hunting_teacher {
 		private void ApplyDataDefaults(LevelId level, bool mspReversedHints, bool backToMenu) {
 			this.HunterTeacherData.currentLevel = (int)level;
 			this.HunterTeacherData.inWinScreen = false;
+			this.HunterTeacherData.sequenceComplete = false;
 			this.HunterTeacherData.mspReversedHints = mspReversedHints;
 			this.HunterTeacherData.backToMenu = backToMenu;
 			this.HunterTeacherData.p1Id = 0;
@@ -78,11 +79,14 @@ namespace sa2_hunting_teacher {
 
 		public void ApplySet(Set set, int seqCount, int seqTotal, int currentRep) {
 			this.HunterTeacherData.inWinScreen = false;
+			this.HunterTeacherData.sequenceComplete = this.level.SequenceWillBeComplete();
 			this.HunterTeacherData.p1Id = set.P1Id;
 			this.HunterTeacherData.p2Id = set.P2Id;
 			this.HunterTeacherData.p3Id = set.P3Id;
 			this.HunterTeacherData.levelLoading = false;
-			this.LogMessage($"Writing Set ({seqCount} / {seqTotal}) For Rep ({currentRep}): " + set);
+			if (!this.level.SequenceComplete()) {
+				this.LogMessage($"Writing Set ({seqCount} / {seqTotal}) For Rep ({currentRep}): " + set);
+			}
 		}
 
 		public bool IsLevelLoading() {
@@ -178,6 +182,7 @@ namespace sa2_hunting_teacher {
 				}
 
 				instance.HunterTeacherData.currentLevel = 0;
+				instance.HunterTeacherData.sequenceComplete = false;
 				instance.sharedMemory.Write(0, ref instance.HunterTeacherData);
 
 				instance.LogMessage("Sequence Complete!" + Environment.NewLine);
@@ -251,6 +256,7 @@ namespace sa2_hunting_teacher {
 	public struct HunterTeacherData {
 		public int currentLevel;
 		public bool inWinScreen;
+		public bool sequenceComplete;
 		public bool levelLoading;
 		public bool mspReversedHints;
 		public bool backToMenu;

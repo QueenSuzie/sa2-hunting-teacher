@@ -4,6 +4,7 @@
 struct HunterTeacherData {
 	int currentLevel;
 	bool inWinScreen;
+	bool sequenceComplete;
 	bool levelLoading;
 	bool mspReversedHints;
 	bool backToMenu;

@@ -81,6 +81,11 @@ void HunterHelper::AwardWin(signed int* player) {
 	}
 
 	HunterHelper::TeacherDataState->inWinScreen = true;
+	if (HunterHelper::TeacherDataState->sequenceComplete) {
+		hAwardWin.Original(player);
+		return;
+	}
+
 	EmeraldManagerObj->Action = 4;
 	EmeraldManagerObj->EmeraldsSpawned = 0;
 	EmeraldManagerObj->Piece1.id = 0xFF;

@@ -26,6 +26,10 @@
 			return SequenceCount >= this.Sequence.Length * this.Repetitions;
 		}
 
+		public bool SequenceWillBeComplete() {
+			return SequenceCount >= (this.Sequence.Length * this.Repetitions) - 1;
+		}
+
 		public void RunSequence() {
 			if (this.Manager.IsInWinScreen() || this.Manager.IsLevelLoading()) {
 				if (this.Manager.IsInWinScreen()) {
