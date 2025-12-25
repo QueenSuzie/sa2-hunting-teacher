@@ -95,7 +95,7 @@ namespace sa2_hunting_teacher.Updates {
 				updateForm.Invoke(() => {
 					MessageBox.Show(
 						updateForm,
-						"There was an error while trying to download the update.\n" +
+						"There was an error while trying to lookup the update details.\n" +
 							"Please try again later.", "Download Error",
 						MessageBoxButtons.OK,
 						MessageBoxIcon.Error
@@ -166,7 +166,7 @@ namespace sa2_hunting_teacher.Updates {
 				updateForm.Invoke(() => {
 					MessageBox.Show(
 						updateForm,
-						"There was an error while trying to download the update.\n" +
+						"There was an error while trying to read the contents of the update.\n" +
 							"Please try again later.", "Download Error",
 						MessageBoxButtons.OK,
 						MessageBoxIcon.Error
