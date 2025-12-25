@@ -26,7 +26,7 @@ namespace sa2_hunting_teacher.Updates {
 		}
 
 		public async Task CheckForUpdates() {
-			UpdateManager.UpdateCleanup();
+			await Task.Run(UpdateManager.UpdateCleanup);
 
 			if (Application.ProductVersion.Contains('-')) {
 				this.currentVersionIsStable = false;
@@ -208,19 +208,30 @@ namespace sa2_hunting_teacher.Updates {
 		}
 
 		private static void UpdateCleanup() {
+			int tries = 5;
 			string dir = Directory.GetCurrentDirectory();
 			string dllPath = Path.Join(dir, SA2Manager.HELPER_DLL_NAME + ".bak");
-			if (File.Exists(dllPath)) {
-				File.Delete(dllPath);
+
+			while (File.Exists(dllPath) && tries-- > 0) {
+				try {
+					File.Delete(dllPath);
+				} catch {
+					Thread.Sleep(1000);
+				}
 			}
 
 			if (Environment.ProcessPath == null) {
 				return;
 			}
 
+			tries = 5;
 			string exePath = Environment.ProcessPath + ".bak";
-			if (File.Exists(exePath)) {
-				File.Delete(exePath);
+			while (File.Exists(exePath) && tries-- > 0) {
+				try {
+					File.Delete(exePath);
+				} catch {
+					Thread.Sleep(1000);
+				}
 			}
 		}
 	}
