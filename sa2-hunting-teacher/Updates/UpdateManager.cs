@@ -2,6 +2,7 @@
 using SharpCompress.Archives.SevenZip;
 using SharpCompress.Common;
 using SharpCompress.Readers;
+using System;
 using System.Diagnostics;
 
 namespace sa2_hunting_teacher.Updates {
@@ -109,7 +110,7 @@ namespace sa2_hunting_teacher.Updates {
 				updateForm.Invoke(() => {
 					MessageBox.Show(
 						updateForm,
-						"There was an error while trying to download the update.\n" +
+						"There was an error while trying to lookup the update details.\n" +
 							"Please try again later.", "Download Error",
 						MessageBoxButtons.OK,
 						MessageBoxIcon.Error
@@ -128,10 +129,27 @@ namespace sa2_hunting_teacher.Updates {
 				HttpResponseMessage download = await this.client.GetAsync(newVersion.BrowserDownloadUrl);
 				download.EnsureSuccessStatusCode();
 
-				using (FileStream fileStream = new(downloadPath, FileMode.CreateNew)) {
-					await download.Content.CopyToAsync(fileStream);
+				using FileStream fileStream = new(downloadPath, FileMode.CreateNew);
+				await download.Content.CopyToAsync(fileStream);
+			} catch (Exception) {
+				if (File.Exists(downloadPath)) {
+					File.Delete(downloadPath);
 				}
 
+				updateForm.Invoke(() => {
+					MessageBox.Show(
+						updateForm,
+						"There was an error while trying to download the update.\n" +
+							"Please try again later.", "Download Error",
+						MessageBoxButtons.OK,
+						MessageBoxIcon.Error
+					);
+				});
+
+				return;
+			}
+
+			try {
 				File.Move(dllPath, dllPath + ".bak", true);
 				File.Move(exePath, exePath + ".bak", true);
 
@@ -143,7 +161,7 @@ namespace sa2_hunting_teacher.Updates {
 				using (Stream stream = File.OpenRead(downloadPath)) {
 					using SevenZipArchive archive = SevenZipArchive.Open(stream);
 					foreach (SevenZipArchiveEntry entry in archive.Entries.Where((entry) => !entry.IsDirectory)) {
-						await entry.WriteToDirectoryAsync(outputDir);
+						await entry.WriteToDirectoryAsync(outputDir, options);
 					}
 				}
 
@@ -152,10 +170,18 @@ namespace sa2_hunting_teacher.Updates {
 				}
 			} catch (Exception) {
 				if (File.Exists(dllPath + ".bak")) {
+					if (File.Exists(dllPath)) {
+						File.Delete(dllPath);
+					}
+
 					File.Move(dllPath + ".bak", dllPath, true);
 				}
 
 				if (File.Exists(exePath + ".bak")) {
+					if (File.Exists(exePath)) {
+						File.Delete(exePath);
+					}
+
 					File.Move(exePath + ".bak", exePath, true);
 				}
 
@@ -167,7 +193,7 @@ namespace sa2_hunting_teacher.Updates {
 					MessageBox.Show(
 						updateForm,
 						"There was an error while trying to read the update contents.\n" +
-							"Please try again later.", "Download Error",
+							"Please try again later.", "Download Error ",
 						MessageBoxButtons.OK,
 						MessageBoxIcon.Error
 					);
@@ -177,7 +203,6 @@ namespace sa2_hunting_teacher.Updates {
 			}
 
 			updateForm.Invoke(updateForm.Close);
-			this.mainForm.Invoke(this.mainForm.Close);
 			Process.Start(exePath);
 			Application.Exit();
 		}
