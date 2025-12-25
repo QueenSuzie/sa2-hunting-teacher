@@ -7,8 +7,8 @@ using System.Text;
 
 namespace sa2_hunting_teacher {
 	internal partial class SA2Manager : IDisposable {
-		private const string SONIC_EXECUTABLE = "sonic2app";
-		private const string HELPER_DLL_NAME = "hunting-teacher.helper.dll";
+		public const string SONIC_EXECUTABLE = "sonic2app";
+		public const string HELPER_DLL_NAME = "hunting-teacher.helper.dll";
 		private static MemoryMappedFile? MemoryMapper;
 		private static bool CanRun = true;
 

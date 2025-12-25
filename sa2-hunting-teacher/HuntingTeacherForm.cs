@@ -1,7 +1,11 @@
-namespace sa2_hunting_teacher {
-	public partial class HuntingTeacherForm : Form {
+using sa2_hunting_teacher.Updates;
+
+namespace sa2_hunting_teacher
+{
+    public partial class HuntingTeacherForm : Form {
 		private static TextBox? CurrentLogBox;
 		private readonly Settings settings;
+		private readonly UpdateManager updateManager;
 
 		public sealed class LevelRow {
 			public Level Level { get; init; } = default;
@@ -26,6 +30,8 @@ namespace sa2_hunting_teacher {
 		public HuntingTeacherForm() {
 			InitializeComponent();
 
+			this.Text += " - v" + Application.ProductVersion;
+			this.updateManager = new UpdateManager(this);
 			HuntingTeacherForm.CurrentLogBox = this.logBox;
 			this.levelSelector.DisplayMember = nameof(LevelRow.Text);
 			this.levelSelector.ValueMember = nameof(LevelRow.Level);
@@ -40,6 +46,8 @@ namespace sa2_hunting_teacher {
 			this.settings = Settings.Load();
 			InitializeSettings();
 			InitializeTooltips();
+
+			Task.Run(this.updateManager.CheckForUpdates);
 		}
 
 		private void InitializeSettings() {
@@ -68,26 +76,26 @@ namespace sa2_hunting_teacher {
 		}
 
 		public static void AddLogItem(string value) {
-			if (CurrentLogBox == null) {
+			if (HuntingTeacherForm.CurrentLogBox == null) {
 				return;
 			}
 
-			CurrentLogBox.AppendText(value + Environment.NewLine);
+			HuntingTeacherForm.CurrentLogBox.AppendText(value + Environment.NewLine);
 		}
 		public bool MspReversedHints() {
-			return mspReverseHints.Checked;
+			return this.mspReverseHints.Checked;
 		}
 
 		public bool BackToMenu() {
-			return backToMenu.Checked;
+			return this.backToMenu.Checked;
 		}
 
 		private void StartBtn_Click(object sender, EventArgs e) {
-			Level selectedLevel = (Level)levelSelector.SelectedValue!;
-			startBtn.Enabled = false;
-			repetitions.Enabled = false;
-			mspReverseHints.Enabled = false;
-			resetBtn.Enabled = true;
+			Level selectedLevel = (Level)this.levelSelector.SelectedValue!;
+			this.startBtn.Enabled = false;
+			this.repetitions.Enabled = false;
+			this.mspReverseHints.Enabled = false;
+			this.resetBtn.Enabled = true;
 
 			Task.Run(() => {
 				try {
@@ -105,10 +113,10 @@ namespace sa2_hunting_teacher {
 
 		public void ResetBtn_Click(object sender, EventArgs e) {
 			SA2Manager.Stop();
-			resetBtn.Enabled = false;
-			repetitions.Enabled = true;
-			mspReverseHints.Enabled = this.ShouldEnableMspReverseHints();
-			startBtn.Enabled = true;
+			this.resetBtn.Enabled = false;
+			this.repetitions.Enabled = true;
+			this.mspReverseHints.Enabled = this.ShouldEnableMspReverseHints();
+			this.startBtn.Enabled = true;
 		}
 
 		private bool ShouldEnableMspReverseHints() {
@@ -116,7 +124,7 @@ namespace sa2_hunting_teacher {
 		}
 
 		private void LevelSelector_SelectedIndexChanged(object sender, EventArgs e) {
-			mspReverseHints.Enabled = this.ShouldEnableMspReverseHints();
+			this.mspReverseHints.Enabled = this.ShouldEnableMspReverseHints();
 		}
 
 		private void Settings_CheckedChanged(object sender, EventArgs e) {
