@@ -1,8 +1,6 @@
 ﻿using SharpCompress.Archives;
 using SharpCompress.Archives.SevenZip;
 using SharpCompress.Common;
-using SharpCompress.Readers;
-using System;
 using System.Diagnostics;
 
 namespace sa2_hunting_teacher.Updates {
@@ -13,7 +11,6 @@ namespace sa2_hunting_teacher.Updates {
 		private readonly HuntingTeacherForm mainForm;
 		private readonly HttpClient client;
 
-		private bool currentVersionIsStable = true;
 		private string? latestTag;
 
 		public UpdateManager(HuntingTeacherForm mainForm) {
@@ -27,39 +24,24 @@ namespace sa2_hunting_teacher.Updates {
 
 		public async Task CheckForUpdates() {
 			await Task.Run(UpdateManager.UpdateCleanup);
-
-			if (Application.ProductVersion.Contains('-')) {
-				this.currentVersionIsStable = false;
-			}
-
 			await this.RunUpdateCheck();
 		}
 
 		private async Task RunUpdateCheck() {
-			int page = 1;
 			string latestVersion = "";
 
-			do {
-				try {
-					HttpResponseMessage res = await this.client.GetAsync(UpdateManager.API_URL + $"/tags?page={page}");
-					res.EnsureSuccessStatusCode();
-					Tag[] tags = Tag.FromJson(await res.Content.ReadAsStringAsync());
-					if (tags.Length == 0) {
-						return;
-					}
-
-                    foreach (Tag tag in tags) {
-						if (!this.currentVersionIsStable) {
-							latestVersion = tag.Name;
-							break;
-						}
-					}
-                } catch (Exception) {
+			try {
+				HttpResponseMessage res = await this.client.GetAsync(UpdateManager.API_URL + $"/tags");
+				res.EnsureSuccessStatusCode();
+				Tag[] tags = Tag.FromJson(await res.Content.ReadAsStringAsync());
+				if (tags.Length == 0) {
 					return;
 				}
 
-				page++;
-			} while (latestVersion.Equals(""));
+				latestVersion = tags[0].Name;
+            } catch (Exception) {
+				return;
+			}
 
 			string currentVersion = "v" + Application.ProductVersion;
 			if (currentVersion.Equals(latestVersion)) {
@@ -158,15 +140,10 @@ namespace sa2_hunting_teacher.Updates {
 					Overwrite = true
 				};
 
-				using (Stream stream = File.OpenRead(downloadPath)) {
-					using SevenZipArchive archive = SevenZipArchive.Open(stream);
-					foreach (SevenZipArchiveEntry entry in archive.Entries.Where((entry) => !entry.IsDirectory)) {
-						await entry.WriteToDirectoryAsync(outputDir, options);
-					}
-				}
-
-				if (File.Exists(downloadPath)) {
-					File.Delete(downloadPath);
+				using Stream stream = File.OpenRead(downloadPath);
+				using SevenZipArchive archive = SevenZipArchive.Open(stream);
+				foreach (SevenZipArchiveEntry entry in archive.Entries.Where((entry) => !entry.IsDirectory)) {
+					await entry.WriteToDirectoryAsync(outputDir, options);
 				}
 			} catch (Exception) {
 				if (File.Exists(dllPath + ".bak")) {
@@ -185,10 +162,6 @@ namespace sa2_hunting_teacher.Updates {
 					File.Move(exePath + ".bak", exePath, true);
 				}
 
-				if (File.Exists(downloadPath)) {
-					File.Delete(downloadPath);
-				}
-
 				updateForm.Invoke(() => {
 					MessageBox.Show(
 						updateForm,
@@ -200,6 +173,10 @@ namespace sa2_hunting_teacher.Updates {
 				});
 
 				return;
+			} finally {
+				if (File.Exists(downloadPath)) {
+					File.Delete(downloadPath);
+				}
 			}
 
 			updateForm.Invoke(updateForm.Close);
