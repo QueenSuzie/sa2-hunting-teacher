@@ -16,15 +16,15 @@ public partial class HuntingTeacherForm : Form {
 	private static readonly Dictionary<Level, (string LevelText, string Category)> SupportedLevels = new() {
 		/** Knuckles */
 		{ Level.WildCanyon, ("Wild Canyon", "Knuckles") },
-		/*{ Level.PumpkinHill, ("Pumpkin Hill", "Knuckles") },
-		{ Level.AquaticMine, ("Aquatic Mine", "Knuckles") },
+		// { Level.PumpkinHill, ("Pumpkin Hill", "Knuckles") },
+		// { Level.AquaticMine, ("Aquatic Mine", "Knuckles") },
 		{ Level.DeathChamber, ("Death Chamber", "Knuckles") },
-		{ Level.MeteorHerd, ("Meteor Herd", "Knuckles") },*/
+		// { Level.MeteorHerd, ("Meteor Herd", "Knuckles") },
 		/** Rouge */
 		{ Level.DryLagoon, ("Dry Lagoon", "Rouge") },
-		/*{ Level.EggQuarters, ("Egg Quarters", "Rouge") },
+		// { Level.EggQuarters, ("Egg Quarters", "Rouge") },
 		{ Level.SecurityHall, ("Security Hall", "Rouge") },
-		{ Level.MadSpace, ("Mad Space", "Rouge") },*/
+		// { Level.MadSpace, ("Mad Space", "Rouge") },
 	};
 
 	public HuntingTeacherForm() {
