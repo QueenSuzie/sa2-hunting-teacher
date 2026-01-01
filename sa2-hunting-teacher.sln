@@ -10,6 +10,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sa2-hunting-teacher", "sa2-
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sa2-hunting-teacher-helper", "sa2-hunting-teacher-helper\sa2-hunting-teacher-helper.vcxproj", "{DC430ACA-E0DB-4414-AFD2-5CE22325B712}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "unit-tests", "unit-tests\unit-tests.csproj", "{5AE85B01-31E1-4328-87E1-4BEAF2E99717}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C6E8768F-E119-4F52-B93A-66978AF8C487} = {C6E8768F-E119-4F52-B93A-66978AF8C487}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -23,6 +28,9 @@ Global
 		{DC430ACA-E0DB-4414-AFD2-5CE22325B712}.Debug|x86.Build.0 = Debug|Win32
 		{DC430ACA-E0DB-4414-AFD2-5CE22325B712}.Release|x86.ActiveCfg = Release|Win32
 		{DC430ACA-E0DB-4414-AFD2-5CE22325B712}.Release|x86.Build.0 = Release|Win32
+		{5AE85B01-31E1-4328-87E1-4BEAF2E99717}.Debug|x86.ActiveCfg = Debug|x86
+		{5AE85B01-31E1-4328-87E1-4BEAF2E99717}.Debug|x86.Build.0 = Debug|x86
+		{5AE85B01-31E1-4328-87E1-4BEAF2E99717}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,53 +1,53 @@
-﻿namespace sa2_hunting_teacher {
-	public enum Level {
-		WildCanyon,
-		PumpkinHill,
-		AquaticMine,
-		DeathChamber,
-		MeteorHerd,
-		DryLagoon,
-		EggQuarters,
-		SecurityHall,
-		MadSpace
-	};
+﻿namespace sa2_hunting_teacher;
 
-	internal abstract class HuntingLevel(SA2Manager manager, byte repetitions) {
-		protected abstract Set[] Sequence { get; }
-		public abstract LevelId LevelId { get; }
+public enum Level {
+	WildCanyon,
+	PumpkinHill,
+	AquaticMine,
+	DeathChamber,
+	MeteorHerd,
+	DryLagoon,
+	EggQuarters,
+	SecurityHall,
+	MadSpace
+};
 
-		private int Next = 0;
-		private int SequenceCount = 0;
+public abstract class HuntingLevel(SA2Manager manager, byte repetitions) {
+	protected abstract Set[] Sequence { get; }
+	public abstract LevelId LevelId { get; }
 
-		protected SA2Manager Manager { get; } = manager;
+	private int Next = 0;
+	private int SequenceCount = 0;
 
-		protected byte Repetitions { get; } = repetitions;
+	protected SA2Manager Manager { get; } = manager;
 
-		public bool SequenceComplete() {
-			return SequenceCount >= this.Sequence.Length * this.Repetitions;
-		}
+	protected byte Repetitions { get; } = repetitions;
 
-		public bool SequenceWillBeComplete() {
-			return SequenceCount >= (this.Sequence.Length * this.Repetitions) - 1;
-		}
+	public bool SequenceComplete() {
+		return SequenceCount >= this.Sequence.Length * this.Repetitions;
+	}
 
-		public void RunSequence() {
-			if (this.Manager.IsInWinScreen() || this.Manager.IsLevelLoading()) {
-				if (this.Manager.IsInWinScreen()) {
-					this.Next = this.NextSequence();
-					this.SequenceCount++;
-				}
+	public bool SequenceWillBeComplete() {
+		return SequenceCount >= (this.Sequence.Length * this.Repetitions) - 1;
+	}
 
-				this.Manager.ApplySet(
-					this.Sequence[Next],
-					this.Next + 1,
-					this.Sequence.Length,
-					(int)Math.Ceiling((double)(this.SequenceCount + 1) / (double)this.Sequence.Length)
-				);
+	public void RunSequence() {
+		if (this.Manager.IsInWinScreen() || this.Manager.IsLevelLoading()) {
+			if (this.Manager.IsInWinScreen()) {
+				this.Next = this.NextSequence();
+				this.SequenceCount++;
 			}
-		}
 
-		private int NextSequence() {
-			return this.Next + 1 >= this.Sequence.Length ? 0 : this.Next + 1;
+			this.Manager.ApplySet(
+				this.Sequence[Next],
+				this.Next + 1,
+				this.Sequence.Length,
+				(int)Math.Ceiling((double)(this.SequenceCount + 1) / (double)this.Sequence.Length)
+			);
 		}
+	}
+
+	private int NextSequence() {
+		return this.Next + 1 >= this.Sequence.Length ? 0 : this.Next + 1;
 	}
 }
