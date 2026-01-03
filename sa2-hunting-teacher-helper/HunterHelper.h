@@ -26,6 +26,9 @@ DataArray(CharObj2Base*, MainCharObj2, 0x1DE9600, 8);
 DataPointer(EmeraldManager*, EmeraldManagerObj, 0x1AF014C);
 DataPointer(__int16, GameState, 0x1934BE0);
 
+static const uint8_t NEW_LINE = 0x0C;
+static const uint8_t CENTER_COMMAND = 0x07;
+
 class HunterHelper {
 	public:
 		static void Init();
