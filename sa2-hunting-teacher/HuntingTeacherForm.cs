@@ -19,7 +19,7 @@ public partial class HuntingTeacherForm : Form {
 		// { Level.PumpkinHill, ("Pumpkin Hill", "Knuckles") },
 		// { Level.AquaticMine, ("Aquatic Mine", "Knuckles") },
 		{ Level.DeathChamber, ("Death Chamber", "Knuckles") },
-		// { Level.MeteorHerd, ("Meteor Herd", "Knuckles") },
+		{ Level.MeteorHerd, ("Meteor Herd", "Knuckles") },
 		/** Rouge */
 		{ Level.DryLagoon, ("Dry Lagoon", "Rouge") },
 		// { Level.EggQuarters, ("Egg Quarters", "Rouge") },
